@@ -79,9 +79,9 @@ final class Token extends Object {
     IF			= 12,
     IN			= 13,
     LET			= 14,
-    LOCAL		= 15	//Added Token
+    LOCAL		= 15,	//Added Token
     OF			= 16,
-    PAR 		= 17	//Added Token
+    PAR 		= 17,	//Added Token
     PROC		= 18,
     RECORD		= 19,
     RECURSIVE	= 20,	//Added Token
