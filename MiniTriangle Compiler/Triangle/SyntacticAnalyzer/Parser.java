@@ -47,6 +47,7 @@ import Triangle.AbstractSyntaxTrees.FuncProcFunc;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
@@ -55,6 +56,7 @@ import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.MultipleProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
@@ -77,6 +79,7 @@ import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
@@ -630,10 +633,20 @@ public class Parser {
       {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        accept(Token.COLON);
-        TypeDenoter tAST = parseTypeDenoter();
-        finish(declarationPos);
-        declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
+        if (currentToken.kind == Token.SEMICOLON) {
+        	acceptIt();
+        	Expression eAST = parseExpression();
+          finish(declarationPos);
+          declarationAST = new InitializedVarDeclaration(iAST, eAST, declarationPos);
+        	
+        }
+        else
+        {
+        	accept(Token.COLON);
+        	TypeDenoter tAST = parseTypeDenoter();
+        	finish(declarationPos);
+        	declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
+	      }
       }
       break;
 
@@ -680,14 +693,20 @@ public class Parser {
       break;
      
     case Token.RECURSIVE:
-    {
-    	acceptIt();
-    	ProcFuncS pfsAST = parseProcFuncS();
-    	accept(Token.END);
-    	finish(declarationPos);
-    	declarationAST = new RecursiveDeclaration(pfsAST, declarationPos);
-    }
-
+	    {
+	    	acceptIt();
+	    	ProcFuncS pfsAST = parseProcFuncS();
+	    	accept(Token.END);
+	    	finish(declarationPos);
+	    	declarationAST = new RecursiveDeclaration(pfsAST, declarationPos);
+	    }
+	    break;
+    case Token.LOCAL:
+    	{
+    		acceptIt();
+    		Declaration localDAST = parseDeclaration();
+    	}
+    	break;
     default:
       syntacticError("\"%\" cannot start a declaration",
         currentToken.spelling);
@@ -1073,6 +1092,7 @@ public class Parser {
 		
 		
 		ProcFunc pf1 = parseProcFunc();
+		
 		accept(Token.AND);
 		
 		ProcFunc pf2 = parseProcFunc();
@@ -1080,24 +1100,51 @@ public class Parser {
 		
 		ProcFuncSequence pfSAST = parseProcFuncSequence();
 		
+		finish(pfsPos);
+		pfsAST = new ProcFuncS(pf1, pf2, pfSAST, pfsPos);
+		
 		return pfsAST;
 	}
 
-	 ProcFuncSequence parseProcFuncSequence() {
+	 ProcFuncSequence parseProcFuncSequence() throws SyntaxError {
 		ProcFuncSequence pfSAST = null;
 		SourcePosition pfSPos = new SourcePosition();
 		start(pfSPos);
 		
 		//////IMPLEMENTATION PENDING
 		if (currentToken.kind == Token.AND){
+			acceptIt();
+			pfSAST = parseProperProcFuncSequence();
+		}
+		else {
+			finish(pfSPos);
+			pfSAST = new EmptyProcFuncSequence(pfSPos);
+		}
+
+		 // TODO Auto-generated method stub
+		return pfSAST;
+	}
+	 
+	ProcFuncSequence	parseProperProcFuncSequence() throws SyntaxError {
+		ProcFuncSequence pfSAST = null;
+		SourcePosition pfSPos = new SourcePosition();
+		start(pfSPos);
+		
+		ProcFunc pfAST = parseProcFunc();
+		
+		if (currentToken.kind == Token.AND) {
+			acceptIt();
+			ProcFuncSequence pfsAST = parseProperProcFuncSequence();
+			finish(pfSPos);
+			pfSAST = new MultipleProcFuncSequence(pfAST, pfsAST, pfSPos);
 			
 		}
 		else {
 			
+			finish(pfSPos);
+			pfSAST = new SingleProcFuncSequence(pfAST, pfSPos);
 		}
-
-		 // TODO Auto-generated method stub
-		return null;
+		return pfSAST;
 	}
 
 	ProcFunc parseProcFunc() throws SyntaxError {

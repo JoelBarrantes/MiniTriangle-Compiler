@@ -1,0 +1,17 @@
+! Raíz entera de un número no negativo
+! Se basa en la suma de los primeros N números naturales impares.
+! Versión anotada.
+
+let
+  !var a : Integer;       ! dato de entrada
+  !var r : Integer;       ! resultado = raíz cuadrada entera (piso de raíz)
+  !var term : Integer;    ! siguiente impar por considerar
+  var sum : Integer;      ! suma de los impares
+  var leter: Char;
+  recursive proc proc1(letter: Char) ~ sort(var r) end and func func1(letter: Char): Char ~ 2+1 and proc proc2(letter: Char) ~ sort(var r) end end
+  
+
+in 
+  proc1(leter);
+ 
+
