@@ -2,3 +2,4 @@
 MiniTriangle Compiler/.project
 MiniTriangle Compiler/.classpath
 *.class
+*.prefs

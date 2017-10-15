@@ -35,6 +35,7 @@ import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.EmptyProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
@@ -42,6 +43,7 @@ import Triangle.AbstractSyntaxTrees.FormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FuncProcFunc;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
@@ -58,10 +60,15 @@ import Triangle.AbstractSyntaxTrees.Operator;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFunc;
+import Triangle.AbstractSyntaxTrees.ProcFuncS;
+import Triangle.AbstractSyntaxTrees.ProcFuncSequence;
+import Triangle.AbstractSyntaxTrees.ProcProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
@@ -590,18 +597,108 @@ public class Parser {
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST = parseSingleDeclaration();
+    declarationAST = parseCompoundDeclaration();
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseSingleDeclaration();
+      Declaration d2AST = parseCompoundDeclaration();
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST,
         declarationPos);
     }
     return declarationAST;
   }
+  
+  Declaration parseCompoundDeclaration() throws SyntaxError {
+  	Declaration declarationAST = null;
+	  SourcePosition declarationPos = new SourcePosition();
+	  start(declarationPos);
+	  
+	  switch (currentToken.kind) {
 
-  Declaration parseSingleDeclaration() throws SyntaxError {
+    case Token.CONST:
+      {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
+        accept(Token.IS);
+        Expression eAST = parseExpression();
+        finish(declarationPos);
+        declarationAST = new ConstDeclaration(iAST, eAST, declarationPos);
+      }
+      break;
+
+    case Token.VAR:
+      {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
+        accept(Token.COLON);
+        TypeDenoter tAST = parseTypeDenoter();
+        finish(declarationPos);
+        declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
+      }
+      break;
+
+    case Token.PROC:
+      {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
+        accept(Token.LPAREN);
+        FormalParameterSequence fpsAST = parseFormalParameterSequence();
+        accept(Token.RPAREN);
+        accept(Token.IS);
+        Command cAST = parseSingleCommand();
+        finish(declarationPos);
+        declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
+      }
+      break;
+
+    case Token.FUNC:
+      {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
+        accept(Token.LPAREN);
+        FormalParameterSequence fpsAST = parseFormalParameterSequence();
+        accept(Token.RPAREN);
+        accept(Token.COLON);
+        TypeDenoter tAST = parseTypeDenoter();
+        accept(Token.IS);
+        Expression eAST = parseExpression();
+        finish(declarationPos);
+        declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
+          declarationPos);
+      }
+      break;
+
+    case Token.TYPE:
+      {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
+        accept(Token.IS);
+        TypeDenoter tAST = parseTypeDenoter();
+        finish(declarationPos);
+        declarationAST = new TypeDeclaration(iAST, tAST, declarationPos);
+      }
+      break;
+     
+    case Token.RECURSIVE:
+    {
+    	acceptIt();
+    	ProcFuncS pfsAST = parseProcFuncS();
+    	accept(Token.END);
+    	finish(declarationPos);
+    	declarationAST = new RecursiveDeclaration(pfsAST, declarationPos);
+    }
+
+    default:
+      syntacticError("\"%\" cannot start a declaration",
+        currentToken.spelling);
+      break;
+
+    }
+    return declarationAST;
+  }
+
+
+	Declaration parseSingleDeclaration() throws SyntaxError {
     Declaration declarationAST = null; // in case there's a syntactic error
 
     SourcePosition declarationPos = new SourcePosition();
@@ -958,4 +1055,96 @@ public class Parser {
     }
     return fieldAST;
   }
+
+
+
+///////////////////////////////////////////////////////////////////////////////
+//
+//NEW GRAMMAR RULES ADDED
+//
+///////////////////////////////////////////////////////////////////////////////
+
+
+	ProcFuncS parseProcFuncS() throws SyntaxError {
+		// TODO Auto-generated method stub
+		ProcFuncS pfsAST = null;
+		SourcePosition pfsPos = new SourcePosition();
+		start(pfsPos);
+		
+		
+		ProcFunc pf1 = parseProcFunc();
+		accept(Token.AND);
+		
+		ProcFunc pf2 = parseProcFunc();
+		
+		
+		ProcFuncSequence pfSAST = parseProcFuncSequence();
+		
+		return pfsAST;
+	}
+
+	 ProcFuncSequence parseProcFuncSequence() {
+		ProcFuncSequence pfSAST = null;
+		SourcePosition pfSPos = new SourcePosition();
+		start(pfSPos);
+		
+		//////IMPLEMENTATION PENDING
+		if (currentToken.kind == Token.AND){
+			
+		}
+		else {
+			
+		}
+
+		 // TODO Auto-generated method stub
+		return null;
+	}
+
+	ProcFunc parseProcFunc() throws SyntaxError {
+		// TODO Auto-generated method stub
+		
+		ProcFunc pfAST = null;
+		SourcePosition pfPos = new SourcePosition();
+		start(pfPos);
+		
+		switch(currentToken.kind) {
+		
+		case Token.PROC:
+			{
+				acceptIt();
+				Identifier iAST = parseIdentifier();
+				accept(Token.LPAREN);
+				FormalParameterSequence fpsAST = parseFormalParameterSequence();
+				accept(Token.RPAREN);
+				accept(Token.IS);
+				Command cmdAST = parseCommand();
+				accept(Token.END);
+				finish(pfPos);
+				pfAST = new ProcProcFunc(iAST, fpsAST, cmdAST, pfPos);
+			}
+			break;
+		case Token.FUNC:
+			{
+				acceptIt();
+				Identifier iAST = parseIdentifier();
+				accept(Token.LPAREN);
+				FormalParameterSequence fpsAST = parseFormalParameterSequence();
+				accept(Token.RPAREN);
+				accept(Token.COLON);
+				TypeDenoter tdAST = parseTypeDenoter();
+				accept(Token.IS);
+				Expression eAST = parseExpression();
+				finish(pfPos);
+				pfAST = new FuncProcFunc(iAST, fpsAST, tdAST, eAST, pfPos);
+			}
+			break;
+    default:
+      syntacticError("\"%\" cannot start a ProcFunc",
+        currentToken.spelling);
+      break;
+		}
+		
+		return pfAST;
+		
+	}
 }
