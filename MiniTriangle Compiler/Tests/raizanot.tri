@@ -1,28 +1,28 @@
-! Raíz entera de un número no negativo
-! Se basa en la suma de los primeros N números naturales impares.
-! Versión anotada.
+! Raï¿½z entera de un nï¿½mero no negativo
+! Se basa en la suma de los primeros N nï¿½meros naturales impares.
+! Versiï¿½n anotada.
 
 let
-  var a : Integer;       ! dato de entrada
-  var r : Integer;       ! resultado = raíz cuadrada entera (piso de raíz)
-  var term : Integer;    ! siguiente impar por considerar
-  func func1(): Integer ~ 3 
-!  recursive proc proc1(letter: Char) ~ fibo(var a) end and func func1(num: Integer): Integer ~ 2+3 and proc proc2() ~ exp(var r) end end;
-!  par var x : Integer and var y: Char and var z: Integer and var j: Char end;
-!  local
-! 	var h : Integer;
-! 	var k : Char;
-! 	var l : Integer
-! 	in 
-! 	var p : Char;
-! 	proc proc3() ~ 
-! 		let 
-! 			var prueba := 10
-! 		in
-! 			func1(prueba)
-! 		end
-! end
+	var a : Integer;       ! dato de entrada
+	var r : Integer;       ! resultado = raï¿½z cuadrada entera (piso de raï¿½z)
+	var term : Integer;    ! siguiente impar por considerar
+	func func1(): Integer ~ 3;
+	recursive proc proc1(letter: Char) ~ fibo(var a) end and func func1(num: Integer): Integer ~ 2+3 and proc proc2() ~ exp(var r) end end;
+	par var x : Integer and var y: Char and var z: Integer and var j: Char end;
+	local
+	 	var h : Integer;
+	 	var k : Char;
+	 	var l : Integer
+	in 
+ 		var p : Char;
+	proc proc3() ~ 
+		let 
+ 			var prueba := 10
+		in
+			func1(prueba)
+		end
+end
 in 
-  func1();
+	func1();
  
 

@@ -454,73 +454,75 @@ public class TreeVisitor implements Visitor {
 
     
     //Added new visitors
+
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createUnary("Recursive Declaration", ast.PFS));
 	}
 
-	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+	public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createBinary("Local Declaration", ast.D1, ast.D2));
 	}
 
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createUnary("Par Declaration.", ast.SDS));
 	}
 
 	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createBinary("Initialized Var Declaration",ast.I,ast.E));
 	}
 
 	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createTernary("Sing.Decl.Seq.", ast.D1, ast.D2, ast.SDS));
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createQuaternary("Func.ProcFunc", ast.I, ast.FPS, ast.T, ast.E));
 	}
 
 	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createTernary("Proc.ProcFunc", ast.I, ast.FPS, ast.C));
 	}
 
 	public Object visitProcFuncS(ProcFuncS ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createTernary("ProcFunc.S.", ast.PF1, ast.PF2, ast.PFS));
 	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createNullary("EmptyProcFunc.Seq."));
 	}
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createUnary("SingleProcFunc.Seq.",ast.PF));
 	}
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createBinary("Mult.ProcFunc.Seq.",ast.PF,ast.PFS));
 	}
 
 	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createNullary("EmptySing.Decl.Seq."));
 	}
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createBinary("Mult.Sing.Decl.Seq.",ast.D, ast.SDS));
 	}
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return (createUnary("Sing.Sing.Decl.Seq.",ast.D));
 	}
+
 }
