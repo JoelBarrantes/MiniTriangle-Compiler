@@ -3,3 +3,7 @@ MiniTriangle Compiler/.project
 MiniTriangle Compiler/.classpath
 *.class
 *.prefs
+*.tri
+*.tri
+triangle-ide/.classpath
+triangle-ide/.project
