@@ -21,7 +21,7 @@ public class ProcFuncS extends AST {
 
 	public Object visit(Visitor v, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return v.visitProcFuncS(this,o);
 	}
 	
 	public ProcFunc PF1,PF2;

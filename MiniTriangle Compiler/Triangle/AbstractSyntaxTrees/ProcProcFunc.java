@@ -18,7 +18,7 @@ public class ProcProcFunc extends ProcFunc {
 
 	public Object visit(Visitor v, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return v.visitProcFuncProc(this,o);
 	}
 
 	public Identifier I;

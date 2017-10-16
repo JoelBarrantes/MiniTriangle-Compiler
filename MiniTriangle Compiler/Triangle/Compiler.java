@@ -68,9 +68,9 @@ public class Compiler {
         System.out.println("Syntactic Analysis ...");
         SourceFile source = new SourceFile(sourceName);
 
-        if (source == null) {
-            System.out.println("Can't access source file " + sourceName);
-            System.exit(1);
+        if (source.equals(null)) {
+          System.out.println("Can't access source file " + sourceName);
+          System.exit(1);
         }
 
         scanner  = new Scanner(source);
@@ -84,9 +84,9 @@ public class Compiler {
         theAST = parser.parseProgram();
         System.out.println(reporter.numErrors);// 1st pass
         if (reporter.numErrors == 0) {
-            //if (showingAST) {
-            //    drawer.draw(theAST);
-            //}
+            if (showingAST) {
+        	      drawer.draw(theAST);
+            }
             System.out.println ("Contextual Analysis ...");
             checker.check(theAST);				// 2nd pass
             if (showingAST) {

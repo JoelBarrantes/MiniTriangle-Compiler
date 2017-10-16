@@ -20,7 +20,7 @@ public class SingleProcFuncSequence extends ProcFuncSequence {
 
 	public Object visit(Visitor v, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return v.visitSingleProcFuncSequence(this,o);
 	}
 	public ProcFunc PF;
 }

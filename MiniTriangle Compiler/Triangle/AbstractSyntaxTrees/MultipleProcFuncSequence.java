@@ -19,7 +19,7 @@ public class MultipleProcFuncSequence extends ProcFuncSequence {
 	}
 
 	public Object visit(Visitor v, Object o) {
-		return null;
+		return v.visitMultipleProcFuncSequence(this,o);
 	
 	}
 

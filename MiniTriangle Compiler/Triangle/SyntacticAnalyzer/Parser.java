@@ -36,6 +36,7 @@ import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyProcFuncSequence;
+import Triangle.AbstractSyntaxTrees.EmptySingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.Expression;
 import Triangle.AbstractSyntaxTrees.FieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.FormalParameter;
@@ -52,13 +53,16 @@ import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
+import Triangle.AbstractSyntaxTrees.MultipleSingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.ParDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
@@ -77,10 +81,13 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
+import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
+import Triangle.AbstractSyntaxTrees.SingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
+import Triangle.AbstractSyntaxTrees.SingleSingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.TypeDenoter;
@@ -633,7 +640,7 @@ public class Parser {
       {
         acceptIt();
         Identifier iAST = parseIdentifier();
-        if (currentToken.kind == Token.SEMICOLON) {
+        if (currentToken.kind == Token.BECOMES) {
         	acceptIt();
         	Expression eAST = parseExpression();
           finish(declarationPos);
@@ -658,7 +665,8 @@ public class Parser {
         FormalParameterSequence fpsAST = parseFormalParameterSequence();
         accept(Token.RPAREN);
         accept(Token.IS);
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand();
+        accept(Token.END);
         finish(declarationPos);
         declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
       }
@@ -704,10 +712,27 @@ public class Parser {
     case Token.LOCAL:
     	{
     		acceptIt();
-    		Declaration localDAST = parseDeclaration();
+    		Declaration localdAST1 = parseDeclaration();
+    		accept(Token.IN);
+    		Declaration localdAST2 = parseDeclaration();
+    		accept(Token.END);
+    		finish(declarationPos);
+    		declarationAST = new LocalDeclaration(localdAST1, localdAST2, declarationPos);
     	}
     	break;
-    default:
+    case Token.PAR:
+	    {
+	    	acceptIt();
+	    	
+	    	SingleDeclarationS sdsAST = parseSingleDeclarationS();
+	    	
+	    	accept(Token.END);
+	    	finish(declarationPos);
+	    	declarationAST = new ParDeclaration( sdsAST, declarationPos);
+	    	
+	    }
+	    break;
+	  default:
       syntacticError("\"%\" cannot start a declaration",
         currentToken.spelling);
       break;
@@ -740,13 +765,34 @@ public class Parser {
       {
         acceptIt();
         Identifier iAST = parseIdentifier();
+        if (currentToken.kind == Token.BECOMES) {
+        	acceptIt();
+        	Expression eAST = parseExpression();
+          finish(declarationPos);
+          declarationAST = new InitializedVarDeclaration(iAST, eAST, declarationPos);
+        	
+        }
+        else
+        {
+        	accept(Token.COLON);
+        	TypeDenoter tAST = parseTypeDenoter();
+        	finish(declarationPos);
+        	declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
+	      }
+      }
+      break;
+
+/*  case Token.VAR:
+      {
+        acceptIt();
+        Identifier iAST = parseIdentifier();
         accept(Token.COLON);
         TypeDenoter tAST = parseTypeDenoter();
         finish(declarationPos);
         declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
       }
       break;
-
+*/
     case Token.PROC:
       {
         acceptIt();
@@ -755,7 +801,8 @@ public class Parser {
         FormalParameterSequence fpsAST = parseFormalParameterSequence();
         accept(Token.RPAREN);
         accept(Token.IS);
-        Command cAST = parseSingleCommand();
+        Command cAST = parseCommand(); //Replaced By Command
+        accept(Token.END); // Added new token
         finish(declarationPos);
         declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
       }
@@ -1085,7 +1132,7 @@ public class Parser {
 
 
 	ProcFuncS parseProcFuncS() throws SyntaxError {
-		// TODO Auto-generated method stub
+		
 		ProcFuncS pfsAST = null;
 		SourcePosition pfsPos = new SourcePosition();
 		start(pfsPos);
@@ -1121,7 +1168,6 @@ public class Parser {
 			pfSAST = new EmptyProcFuncSequence(pfSPos);
 		}
 
-		 // TODO Auto-generated method stub
 		return pfSAST;
 	}
 	 
@@ -1148,7 +1194,7 @@ public class Parser {
 	}
 
 	ProcFunc parseProcFunc() throws SyntaxError {
-		// TODO Auto-generated method stub
+		
 		
 		ProcFunc pfAST = null;
 		SourcePosition pfPos = new SourcePosition();
@@ -1194,4 +1240,68 @@ public class Parser {
 		return pfAST;
 		
 	}
+	
+	SingleDeclarationSequence parseSingleDeclarationSequence() throws SyntaxError {
+		SingleDeclarationSequence sdsAST = null;
+		SourcePosition sdsPos = new SourcePosition();
+		start(sdsPos);
+		
+		//////IMPLEMENTATION PENDING
+		if (currentToken.kind == Token.AND){
+			acceptIt();
+			sdsAST = parseProperSingleDeclarationSequence();
+		}
+		else {
+			finish(sdsPos);
+			sdsAST = new EmptySingleDeclarationSequence(sdsPos);
+		}
+
+	
+		return sdsAST;
+	}
+	 
+	SingleDeclarationSequence parseProperSingleDeclarationSequence() throws SyntaxError {
+		SingleDeclarationSequence sdsAST = null;
+		SourcePosition sdsPos = new SourcePosition();
+		start(sdsPos);
+		
+		Declaration dAST = parseSingleDeclaration();
+		
+		if (currentToken.kind == Token.AND) {
+			acceptIt();
+			SingleDeclarationSequence sdSAST = parseProperSingleDeclarationSequence();
+			finish(sdsPos);
+			sdsAST = new MultipleSingleDeclarationSequence(dAST, sdSAST, sdsPos);
+			
+		}
+		else {
+			
+			finish(sdsPos);
+			sdsAST = new SingleSingleDeclarationSequence(dAST, sdsPos);
+		}
+		return sdsAST;
+	}
+
+	private SingleDeclarationS parseSingleDeclarationS() throws SyntaxError {
+		
+		SingleDeclarationS sdsAST = null;
+		SourcePosition sdsPos = new SourcePosition();
+		start(sdsPos);
+		
+		
+  	Declaration singledAST1 = parseSingleDeclaration();
+  	accept(Token.AND);
+  	Declaration singledAST2 = parseSingleDeclaration();
+  	
+  	SingleDeclarationSequence sdSAST = parseSingleDeclarationSequence();
+  	
+  	finish(sdsPos);
+  	
+  	sdsAST = new SingleDeclarationS(singledAST1, singledAST2, sdSAST, sdsPos);
+  	
+		return sdsAST;
+  	
+	}
+	
+
 }

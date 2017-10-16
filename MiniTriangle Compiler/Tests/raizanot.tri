@@ -3,14 +3,24 @@
 ! Versión anotada.
 
 let
-  !var a : Integer;       ! dato de entrada
-  !var r : Integer;       ! resultado = raíz cuadrada entera (piso de raíz)
-  !var term : Integer;    ! siguiente impar por considerar
-  var sum : Integer;      ! suma de los impares
-  var leter: Char;
-  recursive proc proc1(letter: Char) ~ sort(var r) end and func func1(letter: Char): Char ~ 2+1 and proc proc2(letter: Char) ~ sort(var r) end end
-  
-
+  var a : Integer;       ! dato de entrada
+  var r : Integer;       ! resultado = raíz cuadrada entera (piso de raíz)
+  var term : Integer;    ! siguiente impar por considerar
+  recursive proc proc1(letter: Char) ~ fibo(var a) end and func func1(num: Integer): Integer ~ 2+3 and proc proc2() ~ exp(var r) end end;
+  par var x : Integer and var y: Char and var z: Integer and var j: Char end;
+  local
+ 	var h : Integer;
+ 	var k : Char;
+ 	var l : Integer
+ 	in 
+ 	var p : Char;
+ 	proc proc3() ~ 
+ 		let 
+ 			var prueba := 10
+ 		in
+ 			func1(prueba)
+ 		end
+  end
 in 
   proc1(leter);
  

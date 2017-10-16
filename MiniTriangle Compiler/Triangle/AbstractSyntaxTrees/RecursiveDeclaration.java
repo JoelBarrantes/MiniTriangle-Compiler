@@ -21,9 +21,9 @@ public class RecursiveDeclaration extends Declaration {
 	
 	public Object visit(Visitor v, Object o) {
 		// TODO Auto-generated method stub
-		return null;
+		return v.visitRecursiveDeclaration(this, o);
 	}
 	
-	ProcFuncS PFS;
+	public ProcFuncS PFS;
 
 }
