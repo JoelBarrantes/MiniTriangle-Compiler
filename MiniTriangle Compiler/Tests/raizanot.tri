@@ -15,13 +15,14 @@ let
 	 	var l : Integer
 	in 
  		var p : Char;
-	proc proc3() ~ 
-		let 
- 			var prueba := 10
-		in
-			func1(prueba)
+		proc proc3() ~ 
+			let 
+ 				var prueba := 10
+			in
 		end
-end
+	end;
+	func funcion(h: Integer): Integer ~ 3 
+
 in 
 	func1();
  
