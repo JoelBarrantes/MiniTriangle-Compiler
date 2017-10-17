@@ -720,7 +720,11 @@ public final class Checker implements Visitor {
       if (binding instanceof ConstDeclaration) {
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
-      } else if (binding instanceof VarDeclaration) {
+      } 
+      	else if(binding instanceof InitializedVarDeclaration){
+      	ast.type = ((InitializedVarDeclaration) binding).E.type; 
+      	ast.variable = true;
+      }	else if (binding instanceof VarDeclaration ) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;
       } else if (binding instanceof ConstFormalParameter) {
@@ -957,6 +961,8 @@ public final class Checker implements Visitor {
   //ADDED NEW VISITOR CHECKERS
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.PFS.visit(this, null);
+		
 		return null;
 	}
 
@@ -968,19 +974,25 @@ public final class Checker implements Visitor {
 
 
 	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
+		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+		idTable.enter(ast.I.spelling, ast);
+		if (ast.duplicated)
+		  reporter.reportError ("identifier \"%\" already declared",
+		                        ast.I.spelling, ast.position);
 		return null;
+
 	}
 
 
 	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		// TODO Auto-generated method stub
+		// TODO Auto-generated method stubV
 		return null;
 	}
 
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
+		idTable.enter(ast.I.spelling, ast);
 		return null;
 	}
 
@@ -993,6 +1005,9 @@ public final class Checker implements Visitor {
 
 	public Object visitProcFuncS(ProcFuncS ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.PF1.visit(this, null);
+		ast.PF2.visit(this, null);
+		ast.PFS.visit(this, null);
 		return null;
 	}
 
@@ -1005,12 +1020,16 @@ public final class Checker implements Visitor {
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.PF.visit(this, null);
 		return null;
+		
 	}
 
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.PF.visit(this, null);
+		ast.PFS.visit(this, null);
 		return null;
 	}
 
@@ -1023,12 +1042,15 @@ public final class Checker implements Visitor {
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.D.visit(this, null);
+		ast.SDS.visit(this, null);
 		return null;
 	}
 
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.D.visit(this, null);
 		return null;
 	}
   
