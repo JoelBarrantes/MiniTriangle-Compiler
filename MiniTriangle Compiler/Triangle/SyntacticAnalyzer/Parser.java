@@ -293,7 +293,7 @@ public class Parser {
         }
       }
       break;
-    case Token.REPEAT: // factor in commun to WHILE DO AND UNTIL 
+    case Token.REPEAT: // strategy: factor in common to WHILE DO and UNTIL 
       {
         acceptIt(); // We need accept repeat token
         switch (currentToken.kind) {
