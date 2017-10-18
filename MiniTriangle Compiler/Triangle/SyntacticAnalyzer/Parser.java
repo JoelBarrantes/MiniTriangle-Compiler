@@ -81,6 +81,7 @@ import Triangle.AbstractSyntaxTrees.VarFormalParameter;
 import Triangle.AbstractSyntaxTrees.Vname;
 import Triangle.AbstractSyntaxTrees.VnameExpression;
 import Triangle.AbstractSyntaxTrees.WhileCommand;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 
 public class Parser {
 
@@ -292,6 +293,100 @@ public class Parser {
         }
       }
       break;
+    case Token.REPEAT: // factor in commun to WHILE DO AND UNTIL 
+      {
+        acceptIt(); // We need accept repeat token
+        switch (currentToken.kind) {
+
+          case Token.WHILE:
+            {
+              acceptIt();
+              Expression eAST = parseExpression();
+              accept(Token.DO);
+              Command cAST = parseCommand(); // Old singleCommand
+              accept(Token.END);
+              finish(commandPos);
+              commandAST = new WhileCommand(eAST, cAST, commandPos);
+            }
+          break;
+          case Token.UNTIL:
+              {
+                acceptIt();
+                Expression eAST = parseExpression();
+                accept(Token.DO);
+                Command cAST = parseCommand(); // Old singleCommand
+                accept(Token.END);
+                finish(commandPos);
+                commandAST = new UntilCommand(eAST, cAST, commandPos);
+              }
+          }
+          break;
+          case Token.DO:
+              {
+                acceptIt();
+                Command cAST = parseCommand(); // Old singleCommand
+                switch(currentToken.kind)
+                {
+                  case Token.WHILE:
+                  {
+                    Expression eAST = parseExpression();
+                    accept(Token.END);
+                    finish(commandPos);
+                    commandAST = new DoWhileCommand(eAST, cAST, commandPos);
+                  }
+                  break;
+                  case Token.UNTIL:
+                  {
+                    Expression eAST = parseExpression();
+                    accept(Token.END);
+                    finish(commandPos);
+                    commandAST = new DoUntilCommand(eAST, cAST, commandPos);
+                  }
+                  break;
+                  default:
+                    syntacticError("\"%\" cannot know a command in Do scope",
+                    currentToken.spelling)
+                }   
+              }
+            break;    
+      }
+      break;
+      case Token.FOR:
+        {
+          acceptIt();
+          //Variable assign
+          Identifier iAST = parseIdentifier();
+          Vname vAST = parseRestOfVname(iAST);
+          accept(Token.BECOMES);
+          Expression eAST = parseExpression();
+          finish(commandPos);
+          Command assignAST = new AssignCommand(vAST, eAST, commandPos);
+
+          accept(Token.TO);
+          // Expression
+          Expression eToAST = parseExpression();
+          switch (currentToken.kind)
+          {
+            case Token.WHILE:
+            {
+              acceptIt();
+              Expression eWhileAST = parseExpression();
+              accept(Token.DO);
+              Command cAST = parseCommand(); 
+              accept(Token.END);
+              finish(commandPos);
+              commandAST = new ForWhileCommand(assignAST,eToAST,eWhileAST,cAST);
+
+            } 
+          }
+
+
+          }
+
+        }
+      break;
+    }
+     /* Old implementation
 
     case Token.BEGIN:
       acceptIt();
@@ -334,6 +429,7 @@ public class Parser {
       }
       break;
 
+   
     case Token.SEMICOLON:
     case Token.END:
     case Token.ELSE:
@@ -342,7 +438,7 @@ public class Parser {
 
       finish(commandPos);
       commandAST = new EmptyCommand(commandPos);
-      break;
+      break;*/
 
     default:
       syntacticError("\"%\" cannot start a command",
