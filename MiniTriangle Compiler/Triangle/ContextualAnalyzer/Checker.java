@@ -125,7 +125,10 @@ public final class Checker implements Visitor {
       reportUndeclared(ast.I);
     else if (binding instanceof ProcDeclaration) {
       ast.APS.visit(this, ((ProcDeclaration) binding).FPS);
-    } else if (binding instanceof ProcFormalParameter) {
+    } else if (binding instanceof ProcProcFunc) {
+    	ast.APS.visit(this, ((ProcProcFunc) binding).FPS);
+    }
+    else if (binding instanceof ProcFormalParameter) {
       ast.APS.visit(this, ((ProcFormalParameter) binding).FPS);
     } else
       reporter.reportError("\"%\" is not a procedure identifier",
@@ -215,7 +218,10 @@ public final class Checker implements Visitor {
     if (binding == null) {
       reportUndeclared(ast.I);
       ast.type = StdEnvironment.errorType;
-    } else if (binding instanceof FuncDeclaration) {
+    } else if (binding instanceof FuncProcFunc) { 				//ADDED THIS TO RECOGNIZE A FUNC PROCFUNC AS A FUNCTION
+    	ast.APS.visit(this, ((FuncProcFunc) binding).FPS);
+      ast.type = ((FuncProcFunc) binding).T;
+    }	else if (binding instanceof FuncDeclaration) {
       ast.APS.visit(this, ((FuncDeclaration) binding).FPS);
       ast.type = ((FuncDeclaration) binding).T;
     } else if (binding instanceof FuncFormalParameter) {
@@ -493,7 +499,8 @@ public final class Checker implements Visitor {
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
       reportUndeclared (ast.I);
-    else if (! (binding instanceof FuncDeclaration ||
+    else if (! (binding instanceof FuncProcFunc 	 ||
+    						binding instanceof FuncDeclaration ||
                 binding instanceof FuncFormalParameter))
       reporter.reportError ("\"%\" is not a function identifier",
                             ast.I.spelling, ast.I.position);
@@ -506,7 +513,11 @@ public final class Checker implements Visitor {
       if (binding instanceof FuncDeclaration) {
         FPS = ((FuncDeclaration) binding).FPS;
         T = ((FuncDeclaration) binding).T;
-      } else {
+      } else if(binding instanceof FuncProcFunc) {
+      	FPS = ((FuncProcFunc) binding).FPS;
+        T = ((FuncProcFunc) binding).T;
+      }
+      else {
         FPS = ((FuncFormalParameter) binding).FPS;
         T = ((FuncFormalParameter) binding).T;
       }
@@ -526,7 +537,8 @@ public final class Checker implements Visitor {
     Declaration binding = (Declaration) ast.I.visit(this, null);
     if (binding == null)
       reportUndeclared (ast.I);
-    else if (! (binding instanceof ProcDeclaration ||
+    else if (! (binding instanceof ProcProcFunc 	 ||
+    						binding instanceof ProcDeclaration ||
                 binding instanceof ProcFormalParameter))
       reporter.reportError ("\"%\" is not a procedure identifier",
                             ast.I.spelling, ast.I.position);
@@ -535,8 +547,11 @@ public final class Checker implements Visitor {
                             ast.position);
     else {
       FormalParameterSequence FPS = null;
-      if (binding instanceof ProcDeclaration)
+      if (binding instanceof ProcDeclaration) {
         FPS = ((ProcDeclaration) binding).FPS;
+      } else if(binding instanceof ProcProcFunc) {
+      	FPS = ((ProcProcFunc) binding).FPS;
+      }
       else
         FPS = ((ProcFormalParameter) binding).FPS;
       if (! FPS.equals(((ProcFormalParameter) fp).FPS))
@@ -959,8 +974,17 @@ public final class Checker implements Visitor {
   }
 
   //ADDED NEW VISITOR CHECKERS
+  
+  
+  private boolean firstRecursivePass;
+  
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
+		
+		
+		firstRecursivePass = true;
+		ast.PFS.visit(this, null);
+		firstRecursivePass = false;
 		ast.PFS.visit(this, null);
 		
 		return null;
@@ -990,15 +1014,48 @@ public final class Checker implements Visitor {
 	}
 
 
+
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
-		idTable.enter(ast.I.spelling, ast);
+		
+		if(firstRecursivePass){
+			ast.T = (TypeDenoter) ast.T.visit(this, null);
+			idTable.enter(ast.I.spelling, ast);
+			if (ast.duplicated)
+			  reporter.reportError ("identifier \"%\" already declared",
+			                        ast.I.spelling, ast.position);
+			
+		}	else {
+	    idTable.openScope();
+	    ast.FPS.visit(this, null);
+	    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+	    idTable.closeScope();
+	    if (! ast.T.equals(eType))
+	      reporter.reportError ("body of function \"%\" has wrong type",
+	                            ast.I.spelling, ast.E.position);		
+		}
+		
+		
+		
+		
 		return null;
 	}
 
 
 	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
+		if(firstRecursivePass){
+			idTable.enter(ast.I.spelling, ast);
+			if (ast.duplicated) 
+			  reporter.reportError ("identifier \"%\" already declared",
+			                        ast.I.spelling, ast.position);
+
+		}	else {
+			idTable.openScope();
+	    ast.FPS.visit(this, null);
+	    ast.C.visit(this, null);
+	    idTable.closeScope();
+		}
 		return null;
 	}
 
@@ -1055,7 +1112,7 @@ public final class Checker implements Visitor {
 	}
   
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-	  //TODO implement visitor for LocalDeclaration
+		//TODO
 	  
 	  return null;
   }
