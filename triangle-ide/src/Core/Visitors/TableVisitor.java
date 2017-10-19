@@ -641,72 +641,120 @@ public class TableVisitor implements Visitor {
     //Added new visitors
     
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.PFS.visit(this, null);
 		return null;
 	}
 
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.D1.visit(this, null);
+		ast.D2.visit(this, null);
 		return null;
 	}
 
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.SDS.visit(this, null);
 		return null;
 	}
 
 	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		String name = ast.I.spelling;
+	    String type = "N/A";
+	      try {
+	        int size = (ast.entity!=null?ast.entity.size:0);
+	        int level = -1;
+	        int displacement = -1;
+	        int value = -1;
+	      
+	        if (ast.entity instanceof KnownValue) {
+	              type = "KnownValue";
+	              value = ((KnownValue)ast.entity).value;
+	          }
+	          else if (ast.entity instanceof UnknownValue) {
+	              type = "UnknownValue";
+	              level = ((UnknownValue)ast.entity).address.level;
+	              displacement = ((UnknownValue)ast.entity).address.displacement;
+	          }
+	          addIdentifier(name, type, size, level, displacement, value);
+	      } catch (NullPointerException e) { }
+	      
+	      ast.E.visit(this, null);
+	      ast.I.visit(this, null);
+
+	      return(null);
 	}
 
 	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.D1.visit(this, null);
+		ast.D2.visit(this, null);
 		return null;
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+		      addIdentifier(ast.I.spelling, 
+		              "KnownRoutine", 
+		              (ast.entity!=null?ast.entity.size:0), 
+		              ((KnownRoutine)ast.entity).address.level, 
+		              ((KnownRoutine)ast.entity).address.displacement, 
+		              -1);      
+		      } catch (NullPointerException e) { }
+		      ast.T.visit(this, null);            
+		      ast.FPS.visit(this, null);
+		      ast.E.visit(this, null);
+		            
+		      return(null);
 	}
 
 	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		try {
+		      addIdentifier(ast.I.spelling, "KnownRoutine", 
+		              (ast.entity!=null?ast.entity.size:0), 
+		              ((KnownRoutine)ast.entity).address.level, 
+		              ((KnownRoutine)ast.entity).address.displacement, 
+		              -1);
+		      } catch (NullPointerException e) { }
+		      
+		      ast.FPS.visit(this, null);
+		      ast.C.visit(this, null);
+		            
+		      return(null);
 	}
 
 	public Object visitProcFuncS(ProcFuncS ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.PF1.visit(this, null);
+		ast.PF2.visit(this, null);
+		ast.PFS.visit(this, null);
 		return null;
 	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.PF.visit(this, null);
 		return null;
 	}
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.PF.visit(this, null);
+		ast.PFS.visit(this, null);
 		return null;
 	}
 
 	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.D.visit(this, null);
+		ast.SDS.visit(this, null);
 		return null;
 	}
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
+		ast.D.visit(this, null);
 		return null;
 	}
 }

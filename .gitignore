@@ -8,3 +8,4 @@ MiniTriangle Compiler/.classpath
 triangle-ide/.classpath
 triangle-ide/.project
 *.tri
+MiniTriangle Compiler/Tests/raizanot.tri
