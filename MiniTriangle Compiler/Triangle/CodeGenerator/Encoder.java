@@ -45,39 +45,53 @@ import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
 import Triangle.AbstractSyntaxTrees.EmptyExpression;
 import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.EmptyProcFuncSequence;
+import Triangle.AbstractSyntaxTrees.EmptySingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
+import Triangle.AbstractSyntaxTrees.FuncProcFunc;
 import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
 import Triangle.AbstractSyntaxTrees.LetCommand;
 import Triangle.AbstractSyntaxTrees.LetExpression;
+import Triangle.AbstractSyntaxTrees.LocalDeclaration;
 import Triangle.AbstractSyntaxTrees.MultipleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.MultipleArrayAggregate;
 import Triangle.AbstractSyntaxTrees.MultipleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.MultipleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.MultipleProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.MultipleRecordAggregate;
+import Triangle.AbstractSyntaxTrees.MultipleSingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.Operator;
+import Triangle.AbstractSyntaxTrees.ParDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
+import Triangle.AbstractSyntaxTrees.ProcFuncS;
+import Triangle.AbstractSyntaxTrees.ProcProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
 import Triangle.AbstractSyntaxTrees.RecordTypeDenoter;
+import Triangle.AbstractSyntaxTrees.RecursiveDeclaration;
 import Triangle.AbstractSyntaxTrees.SequentialCommand;
 import Triangle.AbstractSyntaxTrees.SequentialDeclaration;
 import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
+import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
+import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
+import Triangle.AbstractSyntaxTrees.SingleSingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
@@ -354,8 +368,7 @@ public final class Encoder implements Visitor {
     writeTableDetails(ast);
     return new Integer(extraSize);
   }
-
-
+ 
   // Array Aggregates
   public Object visitMultipleArrayAggregate(MultipleArrayAggregate ast,
 					    Object o) {
@@ -995,4 +1008,77 @@ public final class Encoder implements Visitor {
       }
     }
   }
+  
+  //NEW VISITOR FOR THE ENCODER
+  public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+  }
+
+	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitParDeclaration(ParDeclaration ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitProcFuncS(ProcFuncS ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+
 }
