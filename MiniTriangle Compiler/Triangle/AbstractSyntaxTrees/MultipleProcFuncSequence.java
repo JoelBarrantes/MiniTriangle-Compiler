@@ -9,9 +9,9 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  * @author Joel Barrantes
  *
  */
-public class MultipleProcFuncSequence extends ProcFuncSequence {
+public class MultipleProcFuncSequence extends ProcFuncS {
 
-	public MultipleProcFuncSequence(ProcFunc pfAST, ProcFuncSequence pfsAST,
+	public MultipleProcFuncSequence(ProcFunc pfAST, ProcFuncS pfsAST,
             SourcePosition thePosition) {
 			super (thePosition);
 			PF = pfAST;
@@ -24,6 +24,6 @@ public class MultipleProcFuncSequence extends ProcFuncSequence {
 	}
 
 	public ProcFunc PF;
-	public ProcFuncSequence PFS;
+	public ProcFuncS PFS;
 
 }

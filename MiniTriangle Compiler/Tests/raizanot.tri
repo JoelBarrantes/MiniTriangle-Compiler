@@ -6,26 +6,30 @@ let
 	var a : Char;       ! dato de entrada
 	var r : Integer;       ! resultado = ra�z cuadrada entera (piso de ra�z)
 	const term ~ a;   ! siguiente impar por considerar
-	!func func1(): Integer ~ 3;
-	!recursive proc proc1(letter: Char) ~ fibo(var a) end and func func1(num: Integer): Integer ~ 2+3 and proc proc2() ~ exp(var r) end end;
-	!par var x : Integer and var y: Char and var z: Integer and var j: Char end
-	!local
-	! 	var h : Integer;
-	! 	var k : Char;
-	! 	var l : Integer
-	!in 
- 	!	var p : Char;
-	!	proc proc3() ~ 
-	!		let 
- 	!			var prueba := 10
-	!		in
-	!	end
-	!end;
-	func funcion( h: Integer,  x: Char ): Integer ~ 3;	
-	var cancer := 'A'
+	!proc testt(var x: Integer) ~ testt(var x) end;
+	recursive
+		func pot4(num: Integer): Integer ~ num * pot3(num)
+		and
+		func pot2(num: Integer): Integer ~ num*num
+		and
+		func pot3(num: Integer): Integer ~ num * pot2(num)
+		and
+		proc test(var num: Integer) ~ a := 'T'; test(var num) end
+		and
+		func pot5(num: Integer): Integer ~ num * pot4(num)
+		and 
+		proc test1(a: Char) ~ test2(a) end
+		and
+		proc test2(b: Char) ~ test1(b) end
+
+
+	end;
+	var init := 5
+	
 in 
 	a := 'P';
-	cancer := term;
+	r := 3;
+	test(var r);
 	r := 2
 end
 

@@ -78,7 +78,6 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
@@ -581,24 +580,9 @@ public class LayoutVisitor implements Visitor {
 		return layoutBinary("Init.VarDecl.",ast.I,ast.E);
 	}
 
-	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		// TODO Auto-generated method stub
-		return layoutTernary("Sing.Decl.Seq.", ast.D1, ast.D2, ast.SDS);
-	}
-
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
 		return layoutQuaternary("Func.ProcFunc", ast.I, ast.FPS, ast.T, ast.E);
-	}
-
-	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return layoutTernary("Proc.ProcFunc", ast.I, ast.FPS, ast.C);
-	}
-
-	public Object visitProcFuncS(ProcFuncS ast, Object o) {
-		// TODO Auto-generated method stub
-		return layoutTernary("ProcFunc.S.", ast.PF1, ast.PF2, ast.PFS);
 	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
@@ -629,6 +613,11 @@ public class LayoutVisitor implements Visitor {
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
 		return layoutUnary("Sing.Sing.Decl.Seq.",ast.D);
+	}
+
+	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
+		// TODO Auto-generated method stub
+		return layoutTernary("Proc.ProcFunc", ast.I, ast.FPS, ast.C);
 	}
 
 

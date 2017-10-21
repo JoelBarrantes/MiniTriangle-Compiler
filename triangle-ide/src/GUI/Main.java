@@ -57,7 +57,7 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception e) { }
         
         initComponents();
-        setSize(640, 480);
+        setSize(800, 600);
         setVisible(true);
         directory = new File(".");
     }

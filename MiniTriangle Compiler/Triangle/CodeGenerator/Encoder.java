@@ -74,7 +74,6 @@ import Triangle.AbstractSyntaxTrees.ParDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
-import Triangle.AbstractSyntaxTrees.ProcFuncS;
 import Triangle.AbstractSyntaxTrees.ProcProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
@@ -86,7 +85,6 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
@@ -1030,11 +1028,6 @@ public final class Encoder implements Visitor {
 		return null;
 	}
 
-	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
@@ -1045,10 +1038,6 @@ public final class Encoder implements Visitor {
 		return null;
 	}
 
-	public Object visitProcFuncS(ProcFuncS ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
@@ -1076,6 +1065,11 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}

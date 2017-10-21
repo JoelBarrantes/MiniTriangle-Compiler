@@ -69,7 +69,6 @@ import Triangle.AbstractSyntaxTrees.ParDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcActualParameter;
 import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
-import Triangle.AbstractSyntaxTrees.ProcFuncS;
 import Triangle.AbstractSyntaxTrees.ProcProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordExpression;
@@ -81,7 +80,6 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
@@ -1007,14 +1005,6 @@ public final class Checker implements Visitor {
 
 	}
 
-
-	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		// TODO Auto-generated method stubV
-		return null;
-	}
-
-
-
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
 		
@@ -1024,6 +1014,9 @@ public final class Checker implements Visitor {
 			if (ast.duplicated)
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
+			idTable.openScope();
+			ast.FPS.visit(this, null);
+			idTable.closeScope();
 			
 		}	else {
 	    idTable.openScope();
@@ -1042,13 +1035,16 @@ public final class Checker implements Visitor {
 	}
 
 
-	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
+	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
 		if(firstRecursivePass){
 			idTable.enter(ast.I.spelling, ast);
 			if (ast.duplicated) 
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
+			idTable.openScope();
+	    ast.FPS.visit(this, null);
+	    idTable.closeScope();
 
 		}	else {
 			idTable.openScope();
@@ -1058,16 +1054,6 @@ public final class Checker implements Visitor {
 		}
 		return null;
 	}
-
-
-	public Object visitProcFuncS(ProcFuncS ast, Object o) {
-		// TODO Auto-generated method stub
-		ast.PF1.visit(this, null);
-		ast.PF2.visit(this, null);
-		ast.PFS.visit(this, null);
-		return null;
-	}
-
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
@@ -1112,7 +1098,12 @@ public final class Checker implements Visitor {
 	}
   
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-		//TODO
+		
+		idTable.openScope();
+		ast.D1.visit(this, null);
+		ast.D2.visit(this, null);
+		idTable.closeScope();
+
 	  
 	  return null;
   }

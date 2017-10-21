@@ -485,16 +485,6 @@ public class TreeVisitor implements Visitor {
 		return (createQuaternary("Function ProcFunc", ast.I, ast.FPS, ast.T, ast.E));
 	}
 
-	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return (createTernary("Proc ProcFunc", ast.I, ast.FPS, ast.C));
-	}
-
-	public Object visitProcFuncS(ProcFuncS ast, Object o) {
-		// TODO Auto-generated method stub
-		return (createTernary("ProcFunc Sequence", ast.PF1, ast.PF2, ast.PFS));
-	}
-
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
 		return (createNullary("Empty ProcFunc Sequence"));
@@ -523,6 +513,11 @@ public class TreeVisitor implements Visitor {
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
 		return (createUnary("Single Single Declaration Sequence",ast.D));
+	}
+
+	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createTernary("Proc ProcFunc", ast.I, ast.FPS, ast.C));
 	}
 
 }
