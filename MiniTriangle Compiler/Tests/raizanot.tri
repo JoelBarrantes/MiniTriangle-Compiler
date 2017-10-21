@@ -5,6 +5,7 @@
 let
 	var a : Char;       ! dato de entrada
 	var r : Integer;       ! resultado = ra�z cuadrada entera (piso de ra�z)
+
 	const term ~ a;   ! siguiente impar por considerar
 	!func func1(): Integer ~ 3;
 	!recursive proc proc1(letter: Char) ~ fibo(var a) end and func func1(num: Integer): Integer ~ 2+3 and proc proc2() ~ exp(var r) end end;
@@ -28,4 +29,5 @@ in
 	cancer := term;
 	r := 2
 end
+
 
