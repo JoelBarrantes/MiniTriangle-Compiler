@@ -977,8 +977,6 @@ public final class Checker implements Visitor {
   private boolean firstRecursivePass;
   
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
-		
 		
 		firstRecursivePass = true;
 		ast.PFS.visit(this, null);
@@ -991,6 +989,7 @@ public final class Checker implements Visitor {
 
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
+		ast.SDS.visit(this, null);
 		return null;
 	}
 
@@ -1006,8 +1005,7 @@ public final class Checker implements Visitor {
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		
+
 		if(firstRecursivePass){
 			ast.T = (TypeDenoter) ast.T.visit(this, null);
 			idTable.enter(ast.I.spelling, ast);
@@ -1028,15 +1026,13 @@ public final class Checker implements Visitor {
 	                            ast.I.spelling, ast.E.position);		
 		}
 		
-		
-		
-		
+
 		return null;
 	}
 
 
 	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
+
 		if(firstRecursivePass){
 			idTable.enter(ast.I.spelling, ast);
 			if (ast.duplicated) 
@@ -1056,13 +1052,12 @@ public final class Checker implements Visitor {
 	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
+
 		ast.PF.visit(this, null);
 		return null;
 		
@@ -1070,7 +1065,6 @@ public final class Checker implements Visitor {
 
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		ast.PF.visit(this, null);
 		ast.PFS.visit(this, null);
 		return null;
@@ -1078,13 +1072,12 @@ public final class Checker implements Visitor {
 
 
 	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
+
 		ast.D.visit(this, null);
 		ast.SDS.visit(this, null);
 		return null;
@@ -1092,12 +1085,14 @@ public final class Checker implements Visitor {
 
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
+		
 		ast.D.visit(this, null);
 		return null;
 	}
   
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
+		
+		//TODO
 		
 		idTable.openScope();
 		ast.D1.visit(this, null);

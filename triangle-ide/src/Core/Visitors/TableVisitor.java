@@ -66,7 +66,6 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
@@ -683,11 +682,6 @@ public class TableVisitor implements Visitor {
 	      return(null);
 	}
 
-	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		ast.D1.visit(this, null);
-		ast.D2.visit(this, null);
-		return null;
-	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		try {
@@ -726,7 +720,7 @@ public class TableVisitor implements Visitor {
 	}
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
+	
 		ast.D.visit(this, null);
 		ast.SDS.visit(this, null);
 		return null;
