@@ -1,5 +1,5 @@
 /*
- * @(#)WhileCommand.java                        2.1 2003/10/07
+ * @(#)ForWhileCommand.java                        2.1 2003/10/07
  *
  * Copyright (C) 1999, 2003 D.A. Watt and D.F. Brown
  * Dept. of Computing Science, University of Glasgow, Glasgow G12 8QQ Scotland
@@ -18,18 +18,20 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class ForWhileCommand extends Command {
 
-  public ForWhileCommand (Expression eAST, Command cAST, SourcePosition thePosition) {
+  public ForWhileCommand (InitializedVarDeclarationFor eAST,Expression pTo, Expression pWh,Command pC, SourcePosition thePosition) {
     super (thePosition);
-    E = eAST;
-    C = cAST;
+    var = eAST;
+    to = pTo;
+    wh = pWh;
+    c = pC;
   }
 
   public Object visit(Visitor v, Object o) {
-    return v.visitUntilCommand(this, o);
+    return v.visitForWhileCommand(this, o);
   }
 
-  public Expression E;
-  public Command C;
+  public InitializedVarDeclarationFor var;
+  public Expression to;
+  public Expression wh;//While
+  public Command c;
 }
-
-ForWhileCommand(assignAST,eToAST,eWhileAST,cAST)
