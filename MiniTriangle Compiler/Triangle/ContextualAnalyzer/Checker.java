@@ -1111,49 +1111,44 @@ public final class Checker implements Visitor {
   }
 
 
-	@Override
 	public Object visitUntilCommand(UntilCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-
-	@Override
 	public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
 	public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
+
 	public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
 	public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
+
 	public Object visitForDoCommand(ForDoCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 
-	@Override
+
 	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;

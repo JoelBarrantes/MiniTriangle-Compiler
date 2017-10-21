@@ -16,7 +16,7 @@ let
 		and
 		func pot3(num: Integer): Integer ~ num * pot2(num)
 		and
-		proc test(var num: Integer) ~ a := 'T'; test(var num) end
+		proc test(var num: Integer) ~ a := 'T'; test(var num); skip; skip end
 		and
 		func pot5(num: Integer): Integer ~ num * pot4(num)
 		and 
@@ -43,7 +43,12 @@ in
 	a := 'P';
 	r := 3;
 	cancer();
-	r := 2
+	r := 2;
+	if 3>5 then repeat do cancer() until 3+init end else for var j:= 10 to 20 until 30>3 do cancer() end  end;
+	
+	skip
+
+
 end
 
 

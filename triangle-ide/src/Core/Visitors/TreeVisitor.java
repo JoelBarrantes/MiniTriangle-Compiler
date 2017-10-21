@@ -20,6 +20,8 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -28,6 +30,9 @@ import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.EmptySingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForDoCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -36,6 +41,7 @@ import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
 import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclarationFor;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -75,6 +81,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -110,7 +117,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitEmptyCommand(EmptyCommand ast, Object o) {
-        return(createNullary("Empty Command"));
+        return(createNullary("Skip Command"));
     }
     
     public Object visitIfCommand(IfCommand ast, Object obj) {
@@ -501,6 +508,48 @@ public class TreeVisitor implements Visitor {
 
 	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
 		return (createTernary("Proc ProcFunc", ast.I, ast.FPS, ast.C));
+	}
+
+	public Object visitUntilCommand(UntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Until Command",ast.E, ast.C));
+	}
+
+
+	public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Do While Command",ast.E, ast.C));
+	}
+
+
+	public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Do Until Command",ast.E, ast.C));
+	}
+
+
+	public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createQuaternary("For While Command", ast.var, ast.to, ast.wh, ast.c));
+	}
+
+
+	public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createQuaternary("For Until Command", ast.var, ast.to, ast.un, ast.c));
+	}
+
+
+	public Object visitForDoCommand(ForDoCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createTernary("For Do Command", ast.var, ast.to, ast.c));
+	}
+
+
+	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Initialized Var Declaration For",ast.I,ast.E));
+
 	}
 
 }

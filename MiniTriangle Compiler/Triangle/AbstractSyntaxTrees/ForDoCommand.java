@@ -7,6 +7,7 @@ public class ForDoCommand extends Command {
   public ForDoCommand (InitializedVarDeclarationFor eAST,Expression pTo,Command pC, SourcePosition thePosition) {
     super (thePosition);
     var = eAST;
+    to = pTo;
     c = pC;
   }
 
