@@ -1,0 +1,9 @@
+
+MiniTriangle Compiler/.project
+MiniTriangle Compiler/.classpath
+*.class
+*.prefs
+triangle-ide/.classpath
+triangle-ide/.project
+MiniTriangle Compiler/Tests/raizanot.tam
+MiniTriangle Compiler/raizanot

@@ -23,7 +23,14 @@ public interface Visitor {
   public abstract Object visitIfCommand(IfCommand ast, Object o);
   public abstract Object visitLetCommand(LetCommand ast, Object o);
   public abstract Object visitSequentialCommand(SequentialCommand ast, Object o);
+  // Added for Project
   public abstract Object visitWhileCommand(WhileCommand ast, Object o);
+  public abstract Object visitUntilCommand(UntilCommand ast,Object o);
+  public abstract Object visitDoWhileCommand(DoWhileCommand ast,Object o);
+  public abstract Object visitDoUntilCommand(DoUntilCommand ast,Object o);
+  public abstract Object visitForWhileCommand(ForWhileCommand ast,Object o);
+  public abstract Object visitForUntilCommand(ForUntilCommand ast,Object o);
+  public abstract Object visitForDoCommand(ForDoCommand ast,Object o);
 
 
   // Expressions
@@ -49,6 +56,7 @@ public interface Visitor {
   public abstract Object visitUnaryOperatorDeclaration(UnaryOperatorDeclaration ast, Object o);
   public abstract Object visitVarDeclaration(VarDeclaration ast, Object o);
 
+  
   // Array Aggregates
   public abstract Object visitMultipleArrayAggregate(MultipleArrayAggregate ast, Object o);
   public abstract Object visitSingleArrayAggregate(SingleArrayAggregate ast, Object o);
@@ -103,5 +111,22 @@ public interface Visitor {
 
   // Programs
   public abstract Object visitProgram(Program ast, Object o);
+	
+  
+  // Added Visitors
+  public abstract Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o);
+  public abstract Object visitLocalDeclaration(LocalDeclaration ast, Object o);
+	public abstract Object visitParDeclaration(ParDeclaration ast, Object o);
+	public abstract Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o);
+	public abstract Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast,Object o);
+	public abstract Object visitFuncProcFunc(FuncProcFunc ast, Object o);
+	public abstract Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o);
+	public abstract Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o);
+	public abstract Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o);
+	public abstract Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o);
+	public abstract Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o);
+	public abstract Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o);
+	public abstract Object visitProcProcFunc(ProcProcFunc ast, Object o); 
+	
 
 }
