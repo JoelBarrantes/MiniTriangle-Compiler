@@ -74,7 +74,6 @@ import Triangle.AbstractSyntaxTrees.ProcDeclaration;
 import Triangle.AbstractSyntaxTrees.ProcFormalParameter;
 import Triangle.AbstractSyntaxTrees.ProcFunc;
 import Triangle.AbstractSyntaxTrees.ProcFuncS;
-import Triangle.AbstractSyntaxTrees.ProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.ProcProcFunc;
 import Triangle.AbstractSyntaxTrees.Program;
 import Triangle.AbstractSyntaxTrees.RecordAggregate;
@@ -87,7 +86,6 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
@@ -1120,84 +1118,17 @@ public class Parser {
 	  switch (currentToken.kind) {
 
     case Token.CONST:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.IS);
-        Expression eAST = parseExpression();
-        finish(declarationPos);
-        declarationAST = new ConstDeclaration(iAST, eAST, declarationPos);
-      }
-      break;
-
     case Token.VAR:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        if (currentToken.kind == Token.BECOMES) {
-        	acceptIt();
-        	Expression eAST = parseExpression();
-          finish(declarationPos);
-          declarationAST = new InitializedVarDeclaration(iAST, eAST, declarationPos);
-        	
-        }
-        else
-        {
-        	accept(Token.COLON);
-        	TypeDenoter tAST = parseTypeDenoter();
-        	finish(declarationPos);
-        	declarationAST = new VarDeclaration(iAST, tAST, declarationPos);
-	      }
-      }
-      break;
-
     case Token.PROC:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.LPAREN);
-        FormalParameterSequence fpsAST = parseFormalParameterSequence();
-        accept(Token.RPAREN);
-        accept(Token.IS);
-        Command cAST = parseCommand();
-        accept(Token.END);
-        finish(declarationPos);
-        declarationAST = new ProcDeclaration(iAST, fpsAST, cAST, declarationPos);
-      }
-      break;
-
     case Token.FUNC:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.LPAREN);
-        FormalParameterSequence fpsAST = parseFormalParameterSequence();
-        accept(Token.RPAREN);
-        accept(Token.COLON);
-        TypeDenoter tAST = parseTypeDenoter();
-        accept(Token.IS);
-        Expression eAST = parseExpression();
-        finish(declarationPos);
-        declarationAST = new FuncDeclaration(iAST, fpsAST, tAST, eAST,
-          declarationPos);
-      }
-      break;
-
     case Token.TYPE:
-      {
-        acceptIt();
-        Identifier iAST = parseIdentifier();
-        accept(Token.IS);
-        TypeDenoter tAST = parseTypeDenoter();
-        finish(declarationPos);
-        declarationAST = new TypeDeclaration(iAST, tAST, declarationPos);
-      }
+    	declarationAST = parseSingleDeclaration();
       break;
      
     case Token.RECURSIVE:
 	    {
 	    	acceptIt();
-	    	ProcFuncS pfsAST = parseProcFuncS();
+	    	ProcFuncS pfsAST = parseProcFuncSequence();
 	    	accept(Token.END);
 	    	finish(declarationPos);
 	    	declarationAST = new RecursiveDeclaration(pfsAST, declarationPos);
@@ -1218,7 +1149,7 @@ public class Parser {
 	    {
 	    	acceptIt();
 	    	
-	    	SingleDeclarationS sdsAST = parseSingleDeclarationS();
+	    	SingleDeclarationSequence sdsAST = parseSingleDeclarationSequence();
 	    	
 	    	accept(Token.END);
 	    	finish(declarationPos);
@@ -1235,49 +1166,24 @@ public class Parser {
     return declarationAST;
   }
   
-  
-	ProcFuncS parseProcFuncS() throws SyntaxError {
-		
-		ProcFuncS pfsAST = null;
-		SourcePosition pfsPos = new SourcePosition();
-		start(pfsPos);
-		
-		
-		ProcFunc pf1 = parseProcFunc();
-		
-		accept(Token.AND);
-		
-		ProcFunc pf2 = parseProcFunc();
-		
-		
-		ProcFuncSequence pfSAST = parseProcFuncSequence();
-		
-		finish(pfsPos);
-		pfsAST = new ProcFuncS(pf1, pf2, pfSAST, pfsPos);
-		
-		return pfsAST;
-	}
 
-	 ProcFuncSequence parseProcFuncSequence() throws SyntaxError {
-		ProcFuncSequence pfSAST = null;
-		SourcePosition pfSPos = new SourcePosition();
-		start(pfSPos);
-		
-		//////IMPLEMENTATION PENDING
-		if (currentToken.kind == Token.AND){
-			acceptIt();
-			pfSAST = parseProperProcFuncSequence();
-		}
-		else {
+	 ProcFuncS parseProcFuncSequence() throws SyntaxError {
+		 ProcFuncS pfSAST = null;
+			SourcePosition pfSPos = new SourcePosition();
+			start(pfSPos);
+			
+			ProcFunc pfAST = parseProcFunc();
+			
+			accept(Token.AND);
+			ProcFuncS pfsAST = parseProperProcFuncSequence();
 			finish(pfSPos);
-			pfSAST = new EmptyProcFuncSequence(pfSPos);
-		}
-
-		return pfSAST;
+			pfSAST = new MultipleProcFuncSequence(pfAST, pfsAST, pfSPos);
+			
+			return pfSAST;
 	}
 	 
-	ProcFuncSequence	parseProperProcFuncSequence() throws SyntaxError {
-		ProcFuncSequence pfSAST = null;
+	ProcFuncS	parseProperProcFuncSequence() throws SyntaxError {
+		ProcFuncS pfSAST = null;
 		SourcePosition pfSPos = new SourcePosition();
 		start(pfSPos);
 		
@@ -1285,7 +1191,7 @@ public class Parser {
 		
 		if (currentToken.kind == Token.AND) {
 			acceptIt();
-			ProcFuncSequence pfsAST = parseProperProcFuncSequence();
+			ProcFuncS pfsAST = parseProperProcFuncSequence();
 			finish(pfSPos);
 			pfSAST = new MultipleProcFuncSequence(pfAST, pfsAST, pfSPos);
 			
@@ -1351,16 +1257,13 @@ public class Parser {
 		SourcePosition sdsPos = new SourcePosition();
 		start(sdsPos);
 		
-		//////IMPLEMENTATION PENDING
-		if (currentToken.kind == Token.AND){
-			acceptIt();
-			sdsAST = parseProperSingleDeclarationSequence();
-		}
-		else {
-			finish(sdsPos);
-			sdsAST = new EmptySingleDeclarationSequence(sdsPos);
-		}
-
+		Declaration dAST = parseSingleDeclaration();
+		
+		
+		accept(Token.AND);
+		SingleDeclarationSequence sdSAST = parseProperSingleDeclarationSequence();
+		finish(sdsPos);
+		sdsAST = new MultipleSingleDeclarationSequence(dAST, sdSAST, sdsPos);
 	
 		return sdsAST;
 	}
@@ -1387,26 +1290,5 @@ public class Parser {
 		return sdsAST;
 	}
 
-	private SingleDeclarationS parseSingleDeclarationS() throws SyntaxError {
-		
-		SingleDeclarationS sdsAST = null;
-		SourcePosition sdsPos = new SourcePosition();
-		start(sdsPos);
-		
-		
-  	Declaration singledAST1 = parseSingleDeclaration();
-  	accept(Token.AND);
-  	Declaration singledAST2 = parseSingleDeclaration();
-  	
-  	SingleDeclarationSequence sdSAST = parseSingleDeclarationSequence();
-  	
-  	finish(sdsPos);
-  	
-  	sdsAST = new SingleDeclarationS(singledAST1, singledAST2, sdSAST, sdsPos);
-  	
-		return sdsAST;
-  	
-	}
 	
-
 }

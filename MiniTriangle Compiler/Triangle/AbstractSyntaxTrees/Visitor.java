@@ -119,15 +119,14 @@ public interface Visitor {
 	public abstract Object visitParDeclaration(ParDeclaration ast, Object o);
 	public abstract Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o);
 	public abstract Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast,Object o);
-	public abstract Object visitSingleDeclarationS(SingleDeclarationS ast, Object o);
 	public abstract Object visitFuncProcFunc(FuncProcFunc ast, Object o);
-	public abstract Object visitProcFuncProc(ProcProcFunc ast, Object o);
-	public abstract Object visitProcFuncS(ProcFuncS ast, Object o);
 	public abstract Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o);
 	public abstract Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o);
 	public abstract Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o);
 	public abstract Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o);
 	public abstract Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o);
-	public abstract Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o); 
+	public abstract Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o);
+	public abstract Object visitProcProcFunc(ProcProcFunc ast, Object o); 
+	
 
 }
