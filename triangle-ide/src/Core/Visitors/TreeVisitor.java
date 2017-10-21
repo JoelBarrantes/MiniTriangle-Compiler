@@ -477,52 +477,52 @@ public class TreeVisitor implements Visitor {
 
 	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createTernary("Sing.Decl.Seq.", ast.D1, ast.D2, ast.SDS));
+		return (createTernary("Single Declaration Sequence", ast.D1, ast.D2, ast.SDS));
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createQuaternary("Func.ProcFunc", ast.I, ast.FPS, ast.T, ast.E));
+		return (createQuaternary("Function ProcFunc", ast.I, ast.FPS, ast.T, ast.E));
 	}
 
 	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createTernary("Proc.ProcFunc", ast.I, ast.FPS, ast.C));
+		return (createTernary("Proc ProcFunc", ast.I, ast.FPS, ast.C));
 	}
 
 	public Object visitProcFuncS(ProcFuncS ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createTernary("ProcFunc.S.", ast.PF1, ast.PF2, ast.PFS));
+		return (createTernary("ProcFunc Sequence", ast.PF1, ast.PF2, ast.PFS));
 	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createNullary("EmptyProcFunc.Seq."));
+		return (createNullary("Empty ProcFunc Sequence"));
 	}
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createUnary("SingleProcFunc.Seq.",ast.PF));
+		return (createUnary("Single ProcFunc Sequence.",ast.PF));
 	}
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createBinary("Mult.ProcFunc.Seq.",ast.PF,ast.PFS));
+		return (createBinary("Multiple ProcFunc Sequence",ast.PF,ast.PFS));
 	}
 
 	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createNullary("EmptySing.Decl.Seq."));
+		return (createNullary("Empty Single Declaration Sequence"));
 	}
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createBinary("Mult.Sing.Decl.Seq.",ast.D, ast.SDS));
+		return (createBinary("Multiple Single Declaration Sequence",ast.D, ast.SDS));
 	}
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
 		// TODO Auto-generated method stub
-		return (createUnary("Sing.Sing.Decl.Seq.",ast.D));
+		return (createUnary("Single Single Declaration Sequence",ast.D));
 	}
 
 }
