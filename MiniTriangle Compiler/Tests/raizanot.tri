@@ -5,6 +5,7 @@
 let
 	var a : Char;       ! dato de entrada
 	var r : Integer;       ! resultado = ra�z cuadrada entera (piso de ra�z)
+
 	const term ~ a;   ! siguiente impar por considerar
 	
 	local 
@@ -44,4 +45,5 @@ in
 	cancer();
 	r := 2
 end
+
 

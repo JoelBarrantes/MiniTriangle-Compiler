@@ -40,6 +40,8 @@ import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
 import Triangle.AbstractSyntaxTrees.Declaration;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -48,6 +50,9 @@ import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.EmptySingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForDoCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -56,6 +61,7 @@ import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
 import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclarationFor;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -94,6 +100,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -1070,9 +1077,42 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+	}
+
+	public Object visitUntilCommand(UntilCommand ast, Object o) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
+	public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+  
+	public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitForDoCommand(ForDoCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
+    // TODO Auto-generated method stub
+    return null;
+	}
 
 }
