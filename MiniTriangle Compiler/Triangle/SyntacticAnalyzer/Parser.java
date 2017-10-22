@@ -445,6 +445,7 @@ public class Parser {
         commandAST = new LetCommand(dAST, cAST, commandPos);
       }
       break;
+      
       case Token.SKIP:
       {
         acceptIt();
@@ -709,10 +710,10 @@ public class Parser {
 
     SourcePosition declarationPos = new SourcePosition();
     start(declarationPos);
-    declarationAST = parseCompoundDeclaration();
+    declarationAST = parseCompoundDeclaration(); // Now accepts Compound Declarations
     while (currentToken.kind == Token.SEMICOLON) {
       acceptIt();
-      Declaration d2AST = parseCompoundDeclaration();
+      Declaration d2AST = parseCompoundDeclaration();// Now accepts Compound Declarations
       finish(declarationPos);
       declarationAST = new SequentialDeclaration(declarationAST, d2AST,
         declarationPos);
@@ -741,7 +742,7 @@ public class Parser {
       }
       break;
 
-    case Token.VAR:
+    case Token.VAR: //Allows for declaration of Initialized Var
       {
         acceptIt();
         Identifier iAST = parseIdentifier();
@@ -1175,7 +1176,7 @@ public class Parser {
 			
 			ProcFunc pfAST = parseProcFunc();
 			
-			accept(Token.AND);
+			accept(Token.AND); //IS NEEDED A SECOND DECLARATION
 			ProcFuncS pfsAST = parseProperProcFuncSequence();
 			finish(pfSPos);
 			pfSAST = new MultipleProcFuncSequence(pfAST, pfsAST, pfSPos);
@@ -1188,7 +1189,7 @@ public class Parser {
 		SourcePosition pfSPos = new SourcePosition();
 		start(pfSPos);
 		
-		ProcFunc pfAST = parseProcFunc();
+		ProcFunc pfAST = parseProcFunc(); //
 		
 		if (currentToken.kind == Token.AND) {
 			acceptIt();
@@ -1261,7 +1262,7 @@ public class Parser {
 		Declaration dAST = parseSingleDeclaration();
 		
 		
-		accept(Token.AND);
+		accept(Token.AND); // IS NEEDED A SECOND DECLARATION
 		SingleDeclarationSequence sdSAST = parseProperSingleDeclarationSequence();
 		finish(sdsPos);
 		sdsAST = new MultipleSingleDeclarationSequence(dAST, sdSAST, sdsPos);
