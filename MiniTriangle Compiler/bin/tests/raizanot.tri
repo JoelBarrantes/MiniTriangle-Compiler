@@ -1,0 +1,54 @@
+! Ra�z entera de un n�mero no negativoand 
+! Se basa en la suma de los primeros N n�meros naturales impares.
+! Versi�n anotada.
+
+let
+	var a : Char;       ! dato de entrada
+	var r : Integer;       ! resultado = ra�z cuadrada entera (piso de ra�z)
+
+	const term ~ a;   ! siguiente impar por considerar
+	
+	local 
+	recursive
+		func pot4(num: Integer): Integer ~ num * pot3(num)
+		and
+		func pot2(num: Integer): Integer ~ num*num
+		and
+		func pot3(num: Integer): Integer ~ num * pot2(num)
+		and
+		proc test(var num: Integer) ~ a := 'T'; test(var num); skip; skip end
+		and
+		func pot5(num: Integer): Integer ~ num * pot4(num)
+		and 
+		proc test1(a: Char) ~ test2(a) end
+		and
+		proc test2(b: Char) ~ test1(b) end
+
+
+	end;
+	var z: Integer;
+	const h ~ 'J'
+	in
+		par
+			var i : Char and
+			const a ~ 'L' and
+			proc testt(var x: Integer) ~ test(var z) end
+		end
+			
+	end;
+	var init := 5;
+	par var k : Char and proc cancer() ~ k:= 'S' end end
+	
+in 
+	a := 'P';
+	r := 3;
+	cancer();
+	r := 2;
+	if 3>5 then repeat do cancer() until 3+init end else for var j:= 10 to 20 until 30>3 do cancer() end  end;
+	
+	skip
+
+
+end
+
+
