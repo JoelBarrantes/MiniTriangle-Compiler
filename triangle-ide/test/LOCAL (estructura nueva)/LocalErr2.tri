@@ -1,0 +1,14 @@
+
+let
+
+  local
+    const a ~ 1
+  in
+    const b ~ a + 1
+  !end  falta el end
+
+in
+
+  putint(b)
+
+end

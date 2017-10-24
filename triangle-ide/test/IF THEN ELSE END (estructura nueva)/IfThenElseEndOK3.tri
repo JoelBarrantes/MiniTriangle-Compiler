@@ -1,0 +1,7 @@
+! debe imprimir 0
+
+if false then
+  print (1)
+else
+  print (0)
+end

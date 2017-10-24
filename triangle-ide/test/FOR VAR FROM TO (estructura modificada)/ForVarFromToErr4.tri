@@ -1,0 +1,10 @@
+for
+
+  var i := 1 to 10 !falta do
+
+    putint (1);
+
+    putint (2)
+
+end
+

@@ -1,0 +1,14 @@
+! if con do en lugar de then
+
+let
+
+  var a := 1
+
+in 
+  if a > 0 do 
+    put ('M')
+  else
+    a := a ! para no poner skip...
+  end ! del if
+
+end ! del let 

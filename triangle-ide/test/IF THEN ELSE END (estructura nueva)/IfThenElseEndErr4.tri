@@ -1,0 +1,14 @@
+! if sin then
+
+let
+
+  var a := 1
+
+in 
+  if (a > 0)  ! condición al estilo de C y FORTRAN... 
+    put ('M')
+  else
+    a := a ! para no poner skip...
+  end ! del if
+
+end ! del let 

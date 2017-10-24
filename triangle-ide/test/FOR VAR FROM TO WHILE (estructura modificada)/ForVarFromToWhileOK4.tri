@@ -1,0 +1,5 @@
+for
+  var i := 1 to 10 while i < 6 do
+    putint (i)
+end
+
