@@ -1,0 +1,5 @@
+for
+  var i := 1  10 do
+    putint (1)
+end
+

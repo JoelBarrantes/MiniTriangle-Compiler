@@ -1,0 +1,11 @@
+let
+
+   func soyUnaFuncion() : integer ~
+
+      2+3
+
+in
+
+   skip
+
+end
