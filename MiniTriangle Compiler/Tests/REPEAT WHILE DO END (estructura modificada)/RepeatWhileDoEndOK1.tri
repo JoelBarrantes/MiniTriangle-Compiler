@@ -1,3 +1,0 @@
-repeat while true do 
-   putint(0)
-end

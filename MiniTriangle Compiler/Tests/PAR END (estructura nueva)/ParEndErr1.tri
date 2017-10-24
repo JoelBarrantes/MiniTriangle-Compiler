@@ -1,5 +1,0 @@
-let
-  par var asd := 78 end
-in
-  skip
-end

@@ -1,7 +1,0 @@
-let
-  var a := 1
-in
-  skip ;
-  print (a)
-end
-

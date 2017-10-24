@@ -1,8 +1,0 @@
-
-let
-  var n := 1
-in
-
-  putint(n)
-
-end

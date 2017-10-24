@@ -1,5 +1,0 @@
-let
-   var soyElAnoActual := 2017
-in
-   skip
-end

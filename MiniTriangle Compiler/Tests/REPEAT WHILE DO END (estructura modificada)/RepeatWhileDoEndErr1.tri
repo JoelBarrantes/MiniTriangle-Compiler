@@ -1,3 +1,0 @@
-repeat while do
-   putint(1)
-end

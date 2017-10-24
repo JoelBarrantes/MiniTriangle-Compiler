@@ -1,4 +1,0 @@
-repeat do
-   putint(1)
-while
-end

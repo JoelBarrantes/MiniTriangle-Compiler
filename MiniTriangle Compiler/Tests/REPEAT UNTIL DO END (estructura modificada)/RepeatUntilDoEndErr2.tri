@@ -1,2 +1,0 @@
-repeat until true do
-   putint(67)
