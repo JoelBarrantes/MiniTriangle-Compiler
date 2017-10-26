@@ -1,0 +1,3 @@
+repeat until do
+   putint(1)
+end

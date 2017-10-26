@@ -1,0 +1,6 @@
+for
+  var i := 1 to 10 while true do do
+     putint (1)
+end
+
+ 

@@ -1,0 +1,12 @@
+let
+   proc proc1() ~
+      skip 
+   end  and
+   func func1(): Integer ~
+     2 + 1 
+   and proc proc2() ~
+     skip
+   end
+in
+   skip
+end

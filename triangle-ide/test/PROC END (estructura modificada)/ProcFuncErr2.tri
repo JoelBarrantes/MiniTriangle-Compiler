@@ -1,0 +1,9 @@
+let
+   recursive
+      proc proc1() ~
+         skip
+       end
+   end
+in
+   skip
+end

@@ -1,0 +1,10 @@
+!Ejemplo de LET por Felipe
+!"let" declaration "in" command "end"
+
+let
+  ! falta declaración
+in
+
+  putint(n)
+
+end 

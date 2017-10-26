@@ -3,9 +3,7 @@ MiniTriangle Compiler/.project
 MiniTriangle Compiler/.classpath
 *.class
 *.prefs
-*.tri
-*.tri
 triangle-ide/.classpath
 triangle-ide/.project
-*.tri
-MiniTriangle Compiler/Tests/raizanot.tri
+MiniTriangle Compiler/Tests/raizanot.tam
+MiniTriangle Compiler/raizanot
