@@ -1,0 +1,10 @@
+!Ejemplo de LET por Felipe
+!"let" declaration "in" command "end"
+
+let
+    var n := 1
+in
+
+! falta comando
+
+end 

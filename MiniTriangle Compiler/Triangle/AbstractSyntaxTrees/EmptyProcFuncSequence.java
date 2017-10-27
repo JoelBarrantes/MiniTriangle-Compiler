@@ -9,7 +9,7 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  * @author Joel Barrantes
  *
  */
-public class EmptyProcFuncSequence extends ProcFuncSequence {
+public class EmptyProcFuncSequence extends ProcFuncS {
 
 	public EmptyProcFuncSequence(SourcePosition thePosition) {
 		super(thePosition);

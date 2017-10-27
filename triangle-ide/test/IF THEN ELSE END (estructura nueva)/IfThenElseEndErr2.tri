@@ -1,0 +1,12 @@
+! if sin else
+
+let
+
+  var a := 1
+
+in 
+  if a > 0 then 
+    put ('M')
+  end ! del if, faltó el else
+
+end ! del let 

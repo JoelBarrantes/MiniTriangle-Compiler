@@ -1,0 +1,7 @@
+let
+  var a : Integer
+in begin
+  getint (var a);
+  putint (a)
+end 
+

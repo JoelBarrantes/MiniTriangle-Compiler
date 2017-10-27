@@ -9,7 +9,7 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  * @author Joel Barrantes
  *
  */
-public class SingleProcFuncSequence extends ProcFuncSequence {
+public class SingleProcFuncSequence extends ProcFuncS {
 
 	
 	public SingleProcFuncSequence(ProcFunc pfAST, SourcePosition thePosition) {

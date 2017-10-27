@@ -1,0 +1,6 @@
+let
+  par var variable1 := 1 and var variable2 := 2 
+  and var variable3 := 3 and var variable4 := 4 end
+in
+  skip
+end

@@ -4,7 +4,7 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 
 public class ParDeclaration extends Declaration {
 
-	public ParDeclaration(SingleDeclarationS sdsAST, SourcePosition thePosition) {
+	public ParDeclaration(SingleDeclarationSequence sdsAST, SourcePosition thePosition) {
 		super(thePosition);
 		SDS = sdsAST;
 		// TODO Auto-generated constructor stub
@@ -15,6 +15,6 @@ public class ParDeclaration extends Declaration {
 		return v.visitParDeclaration(this, o);
 	}
 	
-	public SingleDeclarationS SDS;
+	public SingleDeclarationSequence SDS;
 
 }

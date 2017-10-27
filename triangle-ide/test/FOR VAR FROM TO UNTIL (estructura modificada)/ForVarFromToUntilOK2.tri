@@ -1,0 +1,5 @@
+for
+  var i := 1 to 10 until i > 20 do ! ver que i sea visible en Exp3
+    putint (1)
+end
+

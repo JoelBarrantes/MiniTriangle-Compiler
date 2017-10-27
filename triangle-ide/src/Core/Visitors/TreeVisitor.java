@@ -20,6 +20,8 @@ import Triangle.AbstractSyntaxTrees.CharacterLiteral;
 import Triangle.AbstractSyntaxTrees.ConstActualParameter;
 import Triangle.AbstractSyntaxTrees.ConstDeclaration;
 import Triangle.AbstractSyntaxTrees.ConstFormalParameter;
+import Triangle.AbstractSyntaxTrees.DoUntilCommand;
+import Triangle.AbstractSyntaxTrees.DoWhileCommand;
 import Triangle.AbstractSyntaxTrees.DotVname;
 import Triangle.AbstractSyntaxTrees.EmptyActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyCommand;
@@ -28,6 +30,9 @@ import Triangle.AbstractSyntaxTrees.EmptyFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.EmptyProcFuncSequence;
 import Triangle.AbstractSyntaxTrees.EmptySingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.ErrorTypeDenoter;
+import Triangle.AbstractSyntaxTrees.ForDoCommand;
+import Triangle.AbstractSyntaxTrees.ForUntilCommand;
+import Triangle.AbstractSyntaxTrees.ForWhileCommand;
 import Triangle.AbstractSyntaxTrees.FuncActualParameter;
 import Triangle.AbstractSyntaxTrees.FuncDeclaration;
 import Triangle.AbstractSyntaxTrees.FuncFormalParameter;
@@ -36,6 +41,7 @@ import Triangle.AbstractSyntaxTrees.Identifier;
 import Triangle.AbstractSyntaxTrees.IfCommand;
 import Triangle.AbstractSyntaxTrees.IfExpression;
 import Triangle.AbstractSyntaxTrees.InitializedVarDeclaration;
+import Triangle.AbstractSyntaxTrees.InitializedVarDeclarationFor;
 import Triangle.AbstractSyntaxTrees.IntTypeDenoter;
 import Triangle.AbstractSyntaxTrees.IntegerExpression;
 import Triangle.AbstractSyntaxTrees.IntegerLiteral;
@@ -66,7 +72,6 @@ import Triangle.AbstractSyntaxTrees.SimpleTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SimpleVname;
 import Triangle.AbstractSyntaxTrees.SingleActualParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleArrayAggregate;
-import Triangle.AbstractSyntaxTrees.SingleDeclarationS;
 import Triangle.AbstractSyntaxTrees.SingleFieldTypeDenoter;
 import Triangle.AbstractSyntaxTrees.SingleFormalParameterSequence;
 import Triangle.AbstractSyntaxTrees.SingleProcFuncSequence;
@@ -76,6 +81,7 @@ import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
+import Triangle.AbstractSyntaxTrees.UntilCommand;
 import Triangle.AbstractSyntaxTrees.VarActualParameter;
 import Triangle.AbstractSyntaxTrees.VarDeclaration;
 import Triangle.AbstractSyntaxTrees.VarFormalParameter;
@@ -111,7 +117,7 @@ public class TreeVisitor implements Visitor {
     }
     
     public Object visitEmptyCommand(EmptyCommand ast, Object o) {
-        return(createNullary("Empty Command"));
+        return(createNullary("Skip Command"));
     }
     
     public Object visitIfCommand(IfCommand ast, Object obj) {
@@ -456,73 +462,94 @@ public class TreeVisitor implements Visitor {
     //Added new visitors
 
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createUnary("Recursive Declaration", ast.PFS));
 	}
 
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object obj) {
-		// TODO Auto-generated method stub
 		return (createBinary("Local Declaration", ast.D1, ast.D2));
 	}
 
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createUnary("Par Declaration.", ast.SDS));
 	}
 
 	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createBinary("Initialized Var Declaration",ast.I,ast.E));
 	}
 
-	public Object visitSingleDeclarationS(SingleDeclarationS ast, Object o) {
-		// TODO Auto-generated method stub
-		return (createTernary("Single Declaration Sequence", ast.D1, ast.D2, ast.SDS));
-	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createQuaternary("Function ProcFunc", ast.I, ast.FPS, ast.T, ast.E));
 	}
 
-	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return (createTernary("Proc ProcFunc", ast.I, ast.FPS, ast.C));
-	}
-
-	public Object visitProcFuncS(ProcFuncS ast, Object o) {
-		// TODO Auto-generated method stub
-		return (createTernary("ProcFunc Sequence", ast.PF1, ast.PF2, ast.PFS));
-	}
-
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createNullary("Empty ProcFunc Sequence"));
 	}
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createUnary("Single ProcFunc Sequence.",ast.PF));
 	}
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createBinary("Multiple ProcFunc Sequence",ast.PF,ast.PFS));
 	}
 
 	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createNullary("Empty Single Declaration Sequence"));
 	}
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createBinary("Multiple Single Declaration Sequence",ast.D, ast.SDS));
 	}
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
 		return (createUnary("Single Single Declaration Sequence",ast.D));
+	}
+
+	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
+		return (createTernary("Proc ProcFunc", ast.I, ast.FPS, ast.C));
+	}
+
+	public Object visitUntilCommand(UntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Until Command",ast.E, ast.C));
+	}
+
+
+	public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Do While Command",ast.E, ast.C));
+	}
+
+
+	public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Do Until Command",ast.E, ast.C));
+	}
+
+
+	public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createQuaternary("For While Command", ast.var, ast.to, ast.wh, ast.c));
+	}
+
+
+	public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createQuaternary("For Until Command", ast.var, ast.to, ast.un, ast.c));
+	}
+
+
+	public Object visitForDoCommand(ForDoCommand ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createTernary("For Do Command", ast.var, ast.to, ast.c));
+	}
+
+
+	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
+		// TODO Auto-generated method stub
+		return (createBinary("Initialized Var Declaration For",ast.I,ast.E));
+
 	}
 
 }

@@ -57,7 +57,7 @@ public class Main extends javax.swing.JFrame {
         } catch (Exception e) { }
         
         initComponents();
-        setSize(640, 480);
+        setSize(800, 600);
         setVisible(true);
         directory = new File(".");
     }
@@ -616,8 +616,8 @@ public class Main extends javax.swing.JFrame {
             if (compiler.compileProgram(desktopPane.getSelectedFrame().getTitle())) {           
                 output.setDelegate(delegateTAMCode);
                 //disassembler.Disassemble(desktopPane.getSelectedFrame().getTitle().replace(".tri", ".tam")); Commented as part of the integration
-                ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitProgram(compiler.getAST(), null)); // Commented as part of the integration
-                ((FileFrame)desktopPane.getSelectedFrame()).setTable(tableVisitor.getTable(compiler.getAST()));
+                ((FileFrame)desktopPane.getSelectedFrame()).setTree((DefaultMutableTreeNode)treeVisitor.visitProgram(compiler.getAST(), null)); // Uncommented to show the AST structure
+                //((FileFrame)desktopPane.getSelectedFrame()).setTable(tableVisitor.getTable(compiler.getAST()));
                 
                 runMenuItem.setEnabled(false);
                 buttonRun.setEnabled(false);

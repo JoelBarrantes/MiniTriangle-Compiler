@@ -62,7 +62,7 @@ public class IDECompiler {
                 //encoder.encodeRun(rootAST, false);
                 
                 if (report.numErrors == 0) {
-                    encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
+                    //encoder.saveObjectProgram(sourceName.replace(".tri", ".tam"));
                     success = true;
                 }
             }
