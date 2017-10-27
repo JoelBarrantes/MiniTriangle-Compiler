@@ -5,9 +5,8 @@
 let
 	var a : Char;       ! dato de entrada
 	var r : Integer;       ! resultado = ra�z cuadrada entera (piso de ra�z)
+	const term ~ a;   ! siguiente impar por considerar		
 
-	const term ~ a;   ! siguiente impar por considerar
-	
 	local 
 	recursive
 		func pot4(num: Integer): Integer ~ num * pot3(num)
@@ -29,19 +28,24 @@ let
 	var z: Integer;
 	const h ~ 'J'
 	in
+
 		par
-			var i : Char and
-			const a ~ 'L' and
-			proc testt(var x: Integer) ~ test(var z) end
+			var i : Integer and
+			const hs ~ 'L' and
+			const tshucss ~ pot4(i) 
+			and proc proc1(var x: Integer) ~ test(var z) end
 		end
 			
 	end;
 	var init := 5;
 	par var k : Char and proc cancer() ~ k:= 'S' end end
+		
 	
+
 in 
 	a := 'P';
-	r := 3;
+	r := h;
+	proc1( r);
 	cancer();
 	r := 2;
 	if 3>5 then repeat do cancer() until 3+init end else for var j:= 10 to 20 until 30>3 do cancer() end  end;

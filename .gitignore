@@ -7,3 +7,6 @@ triangle-ide/.classpath
 triangle-ide/.project
 MiniTriangle Compiler/Tests/raizanot.tam
 MiniTriangle Compiler/raizanot
+MiniTriangle Compiler/bin/tests/tests.zip
+triangle-ide/test/FOR VAR FROM TO (estructura modificada)/ForVarFromToOK1.tri
+*.tri

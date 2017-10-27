@@ -981,7 +981,7 @@ public final class Checker implements Visitor {
   //ADDED NEW VISITOR CHECKERS
   
   
-  private boolean firstRecursivePass;
+  private boolean firstRecursivePass; //Boolean for the recursive declaration, permits recursive calls
   
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		
@@ -1099,14 +1099,48 @@ public final class Checker implements Visitor {
   
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
 		
-		//TODO
 		
-		idTable.openScope();
+		
+		
+		IdentificationTable tempTable = new IdentificationTable(idTable);
+		int oldLevel = idTable.getLevel();
+		IdEntry oldEntry = idTable.getLatest();
+		
+		//idTable = new IdentificationTable();
+	
+	
+		
+		//Analisis contextual para checkear choques entre los nombres.
 		ast.D1.visit(this, null);
 		ast.D2.visit(this, null);
-		idTable.closeScope();
-
-	  
+		
+		
+		//Analisis contextual para exportar los identificadores de la segunda Declaration
+		idTable.openScope();
+		int level = idTable.getLevel();	
+		
+		ast.D2.visit(this, null);
+		
+		IdEntry entry = idTable.getLatest(); 
+		
+		boolean searching = true;
+    //Ciclo para obtener unicamente los identificadores de la segunda Declaration
+		
+		while (searching) {
+    	
+			if (entry.previous.level < level) {
+    		entry.level = oldLevel;
+    		searching = false;
+    		entry.previous = tempTable.getLatest();
+    	}	else {
+	    	entry.level = oldLevel;
+	    	entry = entry.previous;
+	    }
+    }
+    
+    tempTable.setLatest(idTable.getLatest());
+		idTable = new IdentificationTable(tempTable);
+		
 	  return null;
   }
 
