@@ -1,0 +1,13 @@
+! ********** Acceso de i en until expression **********
+! Syntactic Analysis ...
+! 0
+! Contextual Analysis ...
+! Compilation was successful.
+
+for
+  var i := 1 to 10  until 10>i do
+    putint (i);
+    putint (2)
+end
+
+
