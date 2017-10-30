@@ -25,6 +25,11 @@ public final class IdentificationTable {
     level = 0;
     latest = null;
   }
+  
+  public IdentificationTable(IdentificationTable pIdTable) {
+  	this.level = pIdTable.level;
+  	this.latest = pIdTable.latest;
+  }
 
   // Opens a new level in the identification table, 1 higher than the
   // current topmost level.
@@ -104,5 +109,35 @@ public final class IdentificationTable {
 
     return attr;
   }
+
+  //ADDED methods
+  
+	/**
+	 * @return the level
+	 */
+	public int getLevel() {
+		return level;
+	}
+
+	/**
+	 * @param level the level to set
+	 */
+	public void setLevel(int level) {
+		this.level = level;
+	}
+
+	/**
+	 * @return the latest
+	 */
+	public IdEntry getLatest() {
+		return latest;
+	}
+
+	/**
+	 * @param latest the latest to set
+	 */
+	public void setLatest(IdEntry latest) {
+		this.latest = latest;
+	}
 
 }
