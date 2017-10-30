@@ -985,9 +985,9 @@ public final class Checker implements Visitor {
   
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		
-		firstRecursivePass = true;
+		firstRecursivePass = true; //ADD Proc and Func identifiers to allow RECURSION
 		ast.PFS.visit(this, null);
-		firstRecursivePass = false;
+		firstRecursivePass = false;//Contextual analysis for all the declarations
 		ast.PFS.visit(this, null);
 		
 		return null;
@@ -1127,21 +1127,20 @@ public final class Checker implements Visitor {
     //Ciclo para obtener unicamente los identificadores de la segunda Declaration
 		
 		while (searching) {
-    	
+			entry.level = oldLevel;
 			if (entry.previous.level < level) {
-    		entry.level = oldLevel;
     		searching = false;
     		entry.previous = tempTable.getLatest();
     	}	else {
-	    	entry.level = oldLevel;
+	    	
 	    	entry = entry.previous;
 	    }
     }
     
-    tempTable.setLatest(idTable.getLatest());
+		tempTable.setLatest(idTable.getLatest());
 		idTable = new IdentificationTable(tempTable);
 		
-	  return null;
+		return null;
   }
 
 

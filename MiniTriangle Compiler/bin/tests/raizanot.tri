@@ -4,7 +4,7 @@
 
 let
 	var a : Char;       ! dato de entrada
-	var r : Integer;       ! resultado = ra�z cuadrada entera (piso de ra�z)
+	var r : Char;       ! resultado = ra�z cuadrada entera (piso de ra�z)
 	const term ~ a;   ! siguiente impar por considerar		
 
 	local 
@@ -44,10 +44,10 @@ let
 
 in 
 	a := 'P';
-	r := h;
-	init := pot3( r);
+	r := hs;
+	proc1(var init);
 	cancer();
-	r := 2;
+	r := 'H';
 	if 3>5 then repeat do cancer() until 3+init end else for var j:= 10 to 20 until 30>3 do cancer() end  end;
 	
 	skip
