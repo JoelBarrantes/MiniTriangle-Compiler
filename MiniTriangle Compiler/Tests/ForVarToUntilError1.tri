@@ -1,0 +1,12 @@
+!No acceder a la variable i en el to 
+!Syntactic Analysis ...
+!0
+!Contextual Analysis ...
+!ERROR: "i" is not declared 3..3
+!Compilation was unsuccessful.
+
+for
+  var i := 1>10 to 10 until 10>10 do
+    putint (i);
+    putint (2)
+end

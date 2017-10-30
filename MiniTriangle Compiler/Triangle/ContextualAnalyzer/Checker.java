@@ -753,6 +753,9 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarFormalParameter) {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
+      } else if(binding instanceof InitializedVarDeclarationFor){
+        ast.type = ((InitializedVarDeclarationFor) binding).E.type; 
+        ast.variable = false;
       } else
         reporter.reportError ("\"%\" is not a const or var identifier",
                               ast.I.spelling, ast.I.position);
@@ -1145,45 +1148,78 @@ public final class Checker implements Visitor {
 
 
 	public Object visitUntilCommand(UntilCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+	    if (!eType.equals(StdEnvironment.booleanType))
+	      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+	    ast.C.visit(this, null);
+	    return null;
 	}
 
 	public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+	    if (! eType.equals(StdEnvironment.booleanType))
+	      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+	    ast.C.visit(this, null);
+	    return null;
 	}
 
 
 	public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+	    if (! eType.equals(StdEnvironment.booleanType))
+	      reporter.reportError("Boolean expression expected here", "", ast.E.position);
+	    ast.C.visit(this, null);
+	    return null;
 	}
 
 
 
 	public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter eType_to = (TypeDenoter) ast.to.visit(this, null);
+	    if (! eType_to.equals(StdEnvironment.integerType))
+	      reporter.reportError("Integer result  expected here", "", ast.to.position);
+	    ast.var.visit(this, null);
+	    TypeDenoter eType = (TypeDenoter) ast.wh.visit(this, null);
+	    if (! eType.equals(StdEnvironment.booleanType))
+	      reporter.reportError("Boolean expression expected here", "", ast.wh.position);
+	    ast.c.visit(this, null);
+	    return null;
 	}
 
 
 	public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		TypeDenoter eType_to = (TypeDenoter) ast.to.visit(this, null);
+	    if (! eType_to.equals(StdEnvironment.integerType))
+	      reporter.reportError("Integer result  expected here", "", ast.to.position);
+	    ast.var.visit(this, null);// To expression don't know id
+	    TypeDenoter eType = (TypeDenoter) ast.un.visit(this, null);
+	    if (! eType.equals(StdEnvironment.booleanType))
+	      reporter.reportError("Boolean expression expected here", "", ast.un.position);
+	    ast.c.visit(this, null);
+	    return null;
 	}
 
 
 
 	public Object visitForDoCommand(ForDoCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+	    TypeDenoter eType_to = (TypeDenoter) ast.to.visit(this, null);
+	    if (! eType_to.equals(StdEnvironment.integerType))
+	      reporter.reportError("Integer result  expected here", "", ast.to.position);
+	    ast.var.visit(this, null);
+	    ast.c.visit(this, null);
+	    return null;
 	}
 
 
 
 	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
-		// TODO Auto-generated method stub
+		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+		if(! eType.equals(StdEnvironment.integerType))
+		      reporter.reportError("Integer result expected here", "", ast.E.position);
+		idTable.enter(ast.I.spelling, ast);
+		if (ast.duplicated)
+		  reporter.reportError ("identifier \"%\" already declared",
+		                        ast.I.spelling, ast.position);
 		return null;
 	}
   
