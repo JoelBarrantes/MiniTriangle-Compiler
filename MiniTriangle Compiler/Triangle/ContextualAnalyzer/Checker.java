@@ -985,6 +985,8 @@ public final class Checker implements Visitor {
   
   
   private boolean firstRecursivePass; //Boolean for the recursive declaration, permits recursive calls
+  private boolean firstParPass;
+  private IdEntry ParParent;
   
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		
@@ -999,8 +1001,28 @@ public final class Checker implements Visitor {
 
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
-		ast.SDS.visit(this, null);
+		
+		IdentificationTable tempTable = new IdentificationTable(idTable);
+		
+		ParParent = idTable.getLatest();
+		
+		firstParPass = false;
+		
+		ast.SDS.visit(this, null); //Evita que los las declaraciones se puedan ver entre elloas
+		idTable = new IdentificationTable(tempTable);
+		
+		firstParPass = true;
+		ast.SDS.visit(this, null);			//Exporta los nombres y detecta choques entre nombres
+		tempTable = new IdentificationTable(idTable);
+		
+		firstParPass = false;
+		reporter.disable(); //Desactiva el reporter para evitar que se repitan
+		ast.SDS.visit(this, null); //Setea correctamente los tipos de las declaraciones
+		reporter.enable(); // Activa nuevamente el reporter
+		idTable = new IdentificationTable(tempTable);
+		
 		return null;
+		
 	}
 
 
@@ -1035,7 +1057,6 @@ public final class Checker implements Visitor {
 	      reporter.reportError ("body of function \"%\" has wrong type",
 	                            ast.I.spelling, ast.E.position);		
 		}
-		
 
 		return null;
 	}
@@ -1087,48 +1108,51 @@ public final class Checker implements Visitor {
 
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
-
-		ast.D.visit(this, null);
+		if (firstParPass) {
+			ast.D.visit(this, null);			
+		}else {
+			idTable.setLatest(ParParent);
+			ast.D.visit(this, null);
+			//idTable.getLatest().previous = ParParent;
+		}
 		ast.SDS.visit(this, null);
 		return null;
 	}
 
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
+		if (firstParPass) {
+			ast.D.visit(this, null);			
+		}else {
+			idTable.setLatest(ParParent);
+			ast.D.visit(this, null);
+			//idTable.getLatest().previous = ParParent;
+		}
 		
-		ast.D.visit(this, null);
 		return null;
 	}
   
 	public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-		
-		
-		
-		
+
 		IdentificationTable tempTable = new IdentificationTable(idTable);
 		int oldLevel = idTable.getLevel();
 		IdEntry oldEntry = idTable.getLatest();
 		
-		//idTable = new IdentificationTable();
-	
-	
-		
 		//Analisis contextual para checkear choques entre los nombres.
 		ast.D1.visit(this, null);
 		ast.D2.visit(this, null);
-		
-		
+
 		//Analisis contextual para exportar los identificadores de la segunda Declaration
 		idTable.openScope();
-		int level = idTable.getLevel();	
 		
+		int level = idTable.getLevel();	
 		ast.D2.visit(this, null);
 		
+		//Ciclo para obtener unicamente los identificadores de la segunda Declaration
+		
 		IdEntry entry = idTable.getLatest(); 
-		
 		boolean searching = true;
-    //Ciclo para obtener unicamente los identificadores de la segunda Declaration
-		
+    
 		while (searching) {
 			entry.level = oldLevel;
 			if (entry.previous.level < level) {
@@ -1178,11 +1202,13 @@ public final class Checker implements Visitor {
 		TypeDenoter eType_to = (TypeDenoter) ast.to.visit(this, null);
 	    if (! eType_to.equals(StdEnvironment.integerType))
 	      reporter.reportError("Integer result  expected here", "", ast.to.position);
+	    idTable.openScope();
 	    ast.var.visit(this, null);
 	    TypeDenoter eType = (TypeDenoter) ast.wh.visit(this, null);
 	    if (! eType.equals(StdEnvironment.booleanType))
 	      reporter.reportError("Boolean expression expected here", "", ast.wh.position);
 	    ast.c.visit(this, null);
+	    idTable.closeScope();
 	    return null;
 	}
 
@@ -1191,11 +1217,13 @@ public final class Checker implements Visitor {
 		TypeDenoter eType_to = (TypeDenoter) ast.to.visit(this, null);
 	    if (! eType_to.equals(StdEnvironment.integerType))
 	      reporter.reportError("Integer result  expected here", "", ast.to.position);
+	    idTable.openScope();
 	    ast.var.visit(this, null);// To expression don't know id
 	    TypeDenoter eType = (TypeDenoter) ast.un.visit(this, null);
 	    if (! eType.equals(StdEnvironment.booleanType))
 	      reporter.reportError("Boolean expression expected here", "", ast.un.position);
 	    ast.c.visit(this, null);
+	    idTable.closeScope();
 	    return null;
 	}
 
@@ -1205,8 +1233,10 @@ public final class Checker implements Visitor {
 	    TypeDenoter eType_to = (TypeDenoter) ast.to.visit(this, null);
 	    if (! eType_to.equals(StdEnvironment.integerType))
 	      reporter.reportError("Integer result  expected here", "", ast.to.position);
+	    idTable.openScope();
 	    ast.var.visit(this, null);
 	    ast.c.visit(this, null);
+	    idTable.closeScope();
 	    return null;
 	}
 
@@ -1222,7 +1252,5 @@ public final class Checker implements Visitor {
 		                        ast.I.spelling, ast.position);
 		return null;
 	}
-  
-  
-  
+
 }

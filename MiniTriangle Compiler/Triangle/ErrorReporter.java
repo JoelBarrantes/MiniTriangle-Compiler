@@ -19,24 +19,43 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 public class ErrorReporter {
 
   int numErrors;
+  boolean disabled;
 
   ErrorReporter() {
     numErrors = 0;
+    disabled = false;
   }
+  
+  
 
   public void reportError(String message, String tokenName, SourcePosition pos) {
-    System.out.print ("ERROR: ");
+    
+  	if(!disabled) {
+	  	System.out.print ("ERROR: ");
+	
+	    for (int p = 0; p < message.length(); p++)
+	    if (message.charAt(p) == '%')
+	      System.out.print(tokenName);
+	    else
+	      System.out.print(message.charAt(p));
+	    System.out.println(" " + pos.start + ".." + pos.finish);
+	    numErrors++;
+    }
 
-    for (int p = 0; p < message.length(); p++)
-    if (message.charAt(p) == '%')
-      System.out.print(tokenName);
-    else
-      System.out.print(message.charAt(p));
-    System.out.println(" " + pos.start + ".." + pos.finish);
-    numErrors++;
+  	
   }
 
   public void reportRestriction(String message) {
-    System.out.println("RESTRICTION: " + message);
+  	if(!disabled) {
+  		System.out.println("RESTRICTION: " + message);
+  	}
+  }
+  
+  public void disable() {
+  	disabled = true;
+  }
+  
+  public void enable() {
+  	disabled = false;
   }
 }
