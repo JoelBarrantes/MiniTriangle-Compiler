@@ -1,0 +1,11 @@
+! ********** TO expresion no entera **********
+! Syntactic Analysis ...
+! 0
+! Contextual Analysis ...
+! ERROR: Integer result  expected here 9..0
+
+for
+  var i := 1 to 10 until 10>10 do
+    putint (i);
+    putint (2)
+end
