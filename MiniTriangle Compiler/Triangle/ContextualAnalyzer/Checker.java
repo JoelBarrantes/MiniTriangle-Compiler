@@ -1050,7 +1050,9 @@ public final class Checker implements Visitor {
 			
 		}	else {
 	    idTable.openScope();
+	    reporter.disable();
 	    ast.FPS.visit(this, null);
+	    reporter.enable();
 	    TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
 	    idTable.closeScope();
 	    if (! ast.T.equals(eType))
