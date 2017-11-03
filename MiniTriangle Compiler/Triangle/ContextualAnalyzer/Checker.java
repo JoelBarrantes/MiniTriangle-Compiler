@@ -740,10 +740,6 @@ public final class Checker implements Visitor {
       if (binding instanceof ConstDeclaration) {
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
-      } 
-      	else if(binding instanceof InitializedVarDeclaration){
-      	ast.type = ((InitializedVarDeclaration) binding).E.type; 
-      	ast.variable = true;
       }	else if (binding instanceof VarDeclaration ) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;
@@ -753,9 +749,12 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarFormalParameter) {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
-      } else if(binding instanceof InitializedVarDeclarationFor){
+      } else if(binding instanceof InitializedVarDeclarationFor){ //For Control Variable, set var = false
         ast.type = ((InitializedVarDeclarationFor) binding).E.type; 
         ast.variable = false;
+      } else if(binding instanceof InitializedVarDeclaration){ //InitializedVarDeclaration set var = true
+	    	ast.type = ((InitializedVarDeclaration) binding).E.type; 
+	    	ast.variable = true;
       } else
         reporter.reportError ("\"%\" is not a const or var identifier",
                               ast.I.spelling, ast.I.position);
@@ -986,7 +985,6 @@ public final class Checker implements Visitor {
   
   private boolean firstRecursivePass; //Boolean for the recursive declaration, permits recursive calls
   private boolean firstParPass;
-  private IdEntry ParParent;
   
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		
@@ -1003,9 +1001,6 @@ public final class Checker implements Visitor {
 		// TODO Auto-generated method stub
 		
 		IdentificationTable tempTable = new IdentificationTable(idTable);
-		
-		ParParent = idTable.getLatest();
-		
 		firstParPass = false;
 		
 		ast.SDS.visit(this, null); //Evita que los las declaraciones se puedan ver entre elloas
@@ -1015,25 +1010,18 @@ public final class Checker implements Visitor {
 		ast.SDS.visit(this, null);			//Exporta los nombres y detecta choques entre nombres
 		tempTable = new IdentificationTable(idTable);
 		
-		firstParPass = false;
-		reporter.disable(); //Desactiva el reporter para evitar que se repitan
-		ast.SDS.visit(this, null); //Setea correctamente los tipos de las declaraciones
-		reporter.enable(); // Activa nuevamente el reporter
-		idTable = new IdentificationTable(tempTable);
-		
 		return null;
 		
 	}
 
 
-	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
+	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { //Same as visitConstDeclaration
 		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
 		idTable.enter(ast.I.spelling, ast);
 		if (ast.duplicated)
 		  reporter.reportError ("identifier \"%\" already declared",
 		                        ast.I.spelling, ast.position);
 		return null;
-
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
@@ -1045,7 +1033,9 @@ public final class Checker implements Visitor {
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
 			idTable.openScope();
+			reporter.disable();
 			ast.FPS.visit(this, null);
+			reporter.enable();
 			idTable.closeScope();
 			
 		}	else {
@@ -1111,8 +1101,9 @@ public final class Checker implements Visitor {
 		if (firstParPass) {
 			ast.D.visit(this, null);			
 		}else {
-			idTable.setLatest(ParParent);
+			idTable.openScope();
 			ast.D.visit(this, null);
+			idTable.closeScope();
 			//idTable.getLatest().previous = ParParent;
 		}
 		ast.SDS.visit(this, null);
@@ -1124,8 +1115,9 @@ public final class Checker implements Visitor {
 		if (firstParPass) {
 			ast.D.visit(this, null);			
 		}else {
-			idTable.setLatest(ParParent);
+			idTable.openScope();
 			ast.D.visit(this, null);
+			idTable.closeScope();
 			//idTable.getLatest().previous = ParParent;
 		}
 		
