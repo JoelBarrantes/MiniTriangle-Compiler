@@ -740,10 +740,6 @@ public final class Checker implements Visitor {
       if (binding instanceof ConstDeclaration) {
         ast.type = ((ConstDeclaration) binding).E.type;
         ast.variable = false;
-      } 
-      	else if(binding instanceof InitializedVarDeclaration){
-      	ast.type = ((InitializedVarDeclaration) binding).E.type; 
-      	ast.variable = true;
       }	else if (binding instanceof VarDeclaration ) {
         ast.type = ((VarDeclaration) binding).T;
         ast.variable = true;
@@ -753,9 +749,12 @@ public final class Checker implements Visitor {
       } else if (binding instanceof VarFormalParameter) {
         ast.type = ((VarFormalParameter) binding).T;
         ast.variable = true;
-      } else if(binding instanceof InitializedVarDeclarationFor){
+      } else if(binding instanceof InitializedVarDeclarationFor){ //For Control Variable, set var = false
         ast.type = ((InitializedVarDeclarationFor) binding).E.type; 
         ast.variable = false;
+      } else if(binding instanceof InitializedVarDeclaration){ //InitializedVarDeclaration set var = true
+	    	ast.type = ((InitializedVarDeclaration) binding).E.type; 
+	    	ast.variable = true;
       } else
         reporter.reportError ("\"%\" is not a const or var identifier",
                               ast.I.spelling, ast.I.position);
@@ -986,7 +985,6 @@ public final class Checker implements Visitor {
   
   private boolean firstRecursivePass; //Boolean for the recursive declaration, permits recursive calls
   private boolean firstParPass;
-  private IdEntry ParParent;
   
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
 		
@@ -1003,9 +1001,6 @@ public final class Checker implements Visitor {
 		// TODO Auto-generated method stub
 		
 		IdentificationTable tempTable = new IdentificationTable(idTable);
-		
-		ParParent = idTable.getLatest();
-		
 		firstParPass = false;
 		
 		ast.SDS.visit(this, null); //Evita que los las declaraciones se puedan ver entre elloas
@@ -1015,37 +1010,32 @@ public final class Checker implements Visitor {
 		ast.SDS.visit(this, null);			//Exporta los nombres y detecta choques entre nombres
 		tempTable = new IdentificationTable(idTable);
 		
-		firstParPass = false;
-		reporter.disable(); //Desactiva el reporter para evitar que se repitan
-		ast.SDS.visit(this, null); //Setea correctamente los tipos de las declaraciones
-		reporter.enable(); // Activa nuevamente el reporter
-		idTable = new IdentificationTable(tempTable);
-		
 		return null;
 		
 	}
 
 
-	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
+	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) { //Same as visitConstDeclaration
 		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
 		idTable.enter(ast.I.spelling, ast);
 		if (ast.duplicated)
 		  reporter.reportError ("identifier \"%\" already declared",
 		                        ast.I.spelling, ast.position);
 		return null;
-
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
 
-		if(firstRecursivePass){
+		if(firstRecursivePass){ //First recursive pass to allow all the proc func chain to know eachother
 			ast.T = (TypeDenoter) ast.T.visit(this, null);
 			idTable.enter(ast.I.spelling, ast);
 			if (ast.duplicated)
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
 			idTable.openScope();
+			reporter.disable();	//This is done to avoid duplicated error messages
 			ast.FPS.visit(this, null);
+			reporter.enable();
 			idTable.closeScope();
 			
 		}	else {
@@ -1066,13 +1056,15 @@ public final class Checker implements Visitor {
 
 	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
 
-		if(firstRecursivePass){
+		if(firstRecursivePass){ //First recursive pass to allow all the proc func chain to know eachother
 			idTable.enter(ast.I.spelling, ast);
 			if (ast.duplicated) 
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
 			idTable.openScope();
+			reporter.disable(); //This is done to avoid duplicated error messages
 	    ast.FPS.visit(this, null);
+	    reporter.enable();
 	    idTable.closeScope();
 
 		}	else {
@@ -1113,8 +1105,9 @@ public final class Checker implements Visitor {
 		if (firstParPass) {
 			ast.D.visit(this, null);			
 		}else {
-			idTable.setLatest(ParParent);
+			idTable.openScope();
 			ast.D.visit(this, null);
+			idTable.closeScope();
 			//idTable.getLatest().previous = ParParent;
 		}
 		ast.SDS.visit(this, null);
@@ -1126,8 +1119,9 @@ public final class Checker implements Visitor {
 		if (firstParPass) {
 			ast.D.visit(this, null);			
 		}else {
-			idTable.setLatest(ParParent);
+			idTable.openScope();
 			ast.D.visit(this, null);
+			idTable.closeScope();
 			//idTable.getLatest().previous = ParParent;
 		}
 		
@@ -1140,17 +1134,27 @@ public final class Checker implements Visitor {
 		int oldLevel = idTable.getLevel();
 		IdEntry oldEntry = idTable.getLatest();
 		
-		//Analisis contextual para checkear choques entre los nombres.
-		ast.D1.visit(this, null);
-		ast.D2.visit(this, null);
-
-		//Analisis contextual para exportar los identificadores de la segunda Declaration
+		//Analisis contextual para checkear choques de nombres en la primera declaracion.
 		idTable.openScope();
+		ast.D1.visit(this, null);
+		reporter.disable();
+		ast.D2.visit(this, null);
+		reporter.enable();
+		idTable.closeScope();
 		
+		
+		//Analisis contextual para checkear choque de nombres en los identificadores a exportar y permitiendo usar las variables localmente declaradas
+		reporter.disable(); //Evita que se reporten errores de nombres en la primera decl. Simula un openScope pero sin abrirlo
+		ast.D1.visit(this, null);
+		reporter.enable(); //Vuelve a permitir el reporte de errores. 
+		ast.D2.visit(this, null); //Visita la segunda decl usando todas las declaraciones de la tabla, incluyendo los de la anterior decl.
+		
+		//Analisis contextual para exportar los identificadores de la segunda Declaration
+		idTable.openScope();	//Manipulacion de la variable level de la tabla de identificacion para poder exportar los identificadores del nivel mas alto
 		int level = idTable.getLevel();	
 		ast.D2.visit(this, null);
 		
-		//Ciclo para obtener unicamente los identificadores de la segunda Declaration
+		//Ciclo para obtener unicamente los identificadores de la segunda Declaration (Que se encuentran en el nivel mas alto)
 		
 		IdEntry entry = idTable.getLatest(); 
 		boolean searching = true;
@@ -1161,13 +1165,12 @@ public final class Checker implements Visitor {
     		searching = false;
     		entry.previous = tempTable.getLatest();
     	}	else {
-	    	
 	    	entry = entry.previous;
 	    }
     }
     
-		tempTable.setLatest(idTable.getLatest());
-		idTable = new IdentificationTable(tempTable);
+		tempTable.setLatest(idTable.getLatest()); //Setear como ultima entrada la ultima declaracion de LocalDeclaration
+		idTable = new IdentificationTable(tempTable); //Retornar la tabla a su estado original, que se encuentra en TempTable
 		
 		return null;
   }
