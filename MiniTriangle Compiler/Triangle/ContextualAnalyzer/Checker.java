@@ -1000,15 +1000,11 @@ public final class Checker implements Visitor {
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
 		// TODO Auto-generated method stub
 		
-		IdentificationTable tempTable = new IdentificationTable(idTable);
-		firstParPass = false;
-		
+		firstParPass = false;		
 		ast.SDS.visit(this, null); //Evita que los las declaraciones se puedan ver entre elloas
-		idTable = new IdentificationTable(tempTable);
 		
 		firstParPass = true;
 		ast.SDS.visit(this, null);			//Exporta los nombres y detecta choques entre nombres
-		tempTable = new IdentificationTable(idTable);
 		
 		return null;
 		
