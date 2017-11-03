@@ -1,4 +1,0 @@
-repeat do 
-   putint(0)
-while true
-end

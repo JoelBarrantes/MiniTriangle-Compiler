@@ -1,5 +1,0 @@
-repeat while true do
-   skip; 
-   skip;
-   putint(1)
-end

@@ -1,4 +1,0 @@
-repeat do
-   print(0)
-until false
-end

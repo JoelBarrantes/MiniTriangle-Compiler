@@ -1,6 +1,0 @@
-repeat do
-   skip; 
-   skip;
-   print(1)
-until false 
-end

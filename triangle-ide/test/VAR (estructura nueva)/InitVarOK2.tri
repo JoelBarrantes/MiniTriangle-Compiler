@@ -1,7 +1,0 @@
-let
-   var soyElAnoAnterior  := 2016;
-   var soyElAnoActual    := 2017;
-   var soyElAnoSiguiente := 2018
-in
-   skip
-end

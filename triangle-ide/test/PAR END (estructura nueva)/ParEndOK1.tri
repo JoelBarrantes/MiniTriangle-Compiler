@@ -1,5 +1,0 @@
-let
-  par var variable1 := 78 and var variable2 := 78 end
-in
-  skip
-end
