@@ -1060,9 +1060,12 @@ public final class Checker implements Visitor {
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
 			idTable.openScope();
-			reporter.disable(); //This is done to avoid duplicated error messages
-	    ast.FPS.visit(this, null);
-	    reporter.enable();
+			if(reporter.isDisabled()) ast.FPS.visit(this, null);
+			else {	
+				reporter.disable(); //This is done to avoid duplicated error messages
+		    ast.FPS.visit(this, null);
+		    reporter.enable();
+			}
 	    idTable.closeScope();
 
 		}	else {
