@@ -992,7 +992,7 @@ public final class Checker implements Visitor {
 		ast.PFS.visit(this, null);
 		firstRecursivePass = false;//Contextual analysis for all the declarations
 		ast.PFS.visit(this, null);
-		
+
 		return null;
 	}
 
@@ -1029,9 +1029,13 @@ public final class Checker implements Visitor {
 			  reporter.reportError ("identifier \"%\" already declared",
 			                        ast.I.spelling, ast.position);
 			idTable.openScope();
-			reporter.disable();	//This is done to avoid duplicated error messages
-			ast.FPS.visit(this, null);
-			reporter.enable();
+			
+			if(reporter.isDisabled()) ast.FPS.visit(this, null);
+			else {	
+				reporter.disable();	//This is done to avoid duplicated error messages
+				ast.FPS.visit(this, null);
+				reporter.enable();
+			}
 			idTable.closeScope();
 			
 		}	else {
@@ -1131,13 +1135,9 @@ public final class Checker implements Visitor {
 		//Analisis contextual para checkear choques de nombres en la primera declaracion.
 		idTable.openScope();
 		ast.D1.visit(this, null);
-		reporter.disable();
-		ast.D2.visit(this, null);
-		reporter.enable();
 		idTable.closeScope();
+			
 		
-		
-		//Analisis contextual para checkear choque de nombres en los identificadores a exportar y permitiendo usar las variables localmente declaradas
 		reporter.disable(); //Evita que se reporten errores de nombres en la primera decl. Simula un openScope pero sin abrirlo
 		ast.D1.visit(this, null);
 		reporter.enable(); //Vuelve a permitir el reporte de errores. 

@@ -851,6 +851,8 @@ public final class Encoder implements Visitor {
   // The address of the next instruction is held in nextInstrAddr.
 
   private int nextInstrAddr;
+	private boolean firstRecursivePass;
+	private boolean machineEnabled = true;
 
   // Appends an instruction, with the given fields, to the object code.
   private void emit (int op, int n, int r, int d) {
@@ -866,14 +868,18 @@ public final class Encoder implements Visitor {
     if (nextInstrAddr == Machine.PB)
       reporter.reportRestriction("too many instructions for code segment");
     else {
+    	if (machineEnabled ) {
         Machine.code[nextInstrAddr] = nextInstr;
         nextInstrAddr = nextInstrAddr + 1;
+    }	else {
+    		nextInstrAddr = nextInstrAddr + 1;
+    	}
     }
   }
 
   // Patches the d-field of the instruction at address addr.
   private void patch (int addr, int d) {
-    Machine.code[addr].d = d;
+    if (machineEnabled) Machine.code[addr].d = d;
   }
 
   // DATA REPRESENTATION
@@ -1016,35 +1022,106 @@ public final class Encoder implements Visitor {
   
   //NEW VISITOR FOR THE ENCODER
   public Object visitLocalDeclaration(LocalDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+  	Frame frame = (Frame) o;
+    int extraSize1, extraSize2;
+
+    extraSize1 = ((Integer) ast.D1.visit(this, frame)).intValue();
+    Frame frame1 = new Frame (frame, extraSize1);
+    extraSize2 = ((Integer) ast.D2.visit(this, frame1)).intValue();
+    return new Integer(extraSize1 + extraSize2);
+
   }
 
 	public Object visitRecursiveDeclaration(RecursiveDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Frame frame = (Frame) o;
+    int extraSize;
+
+    machineEnabled = false;
+    int nextInstrAddrTemp = nextInstrAddr;
+    
+    extraSize = ((Integer) ast.PFS.visit(this, frame)).intValue();
+    nextInstrAddr  = nextInstrAddrTemp;
+    extraSize = ((Integer) ast.PFS.visit(this, frame)).intValue();
+    
+    machineEnabled = true;
+    nextInstrAddr  = nextInstrAddrTemp;
+    extraSize = ((Integer) ast.PFS.visit(this, frame)).intValue();
+    return new Integer(extraSize );
 	}
 
 	public Object visitParDeclaration(ParDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Frame frame = (Frame) o;
+    int extraSize1;
+
+    extraSize1 = ((Integer) ast.SDS.visit(this, frame)).intValue();
+    
+    return new Integer(extraSize1 );
+ 
 	}
 
 	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		//NEED TESTING
+
+		Frame frame = (Frame) o;
+    int extraSize;
+    
+	  if (ast.E instanceof CharacterExpression || ast.E instanceof IntegerExpression ) {
+	  		extraSize = ((Integer) ast.E.visit(this, null)).intValue();
+	      ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
+	  } else {
+	    Integer valSize = (Integer) ast.E.visit(this, frame);
+	    //encodeStore(ast.V, new Frame (frame, valSize.intValue()),valSize.intValue());
+	    ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
+	    extraSize = valSize.intValue();
+	  }
+
+    writeTableDetails(ast);
+    return new Integer(extraSize);    
 	}
 
 	public Object visitFuncProcFunc(FuncProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		Frame frame = (Frame) o;
+    int jumpAddr = nextInstrAddr;
+    int argsSize = 0, valSize = 0;
 
-	public Object visitProcFuncProc(ProcProcFunc ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    ast.entity = new KnownRoutine(Machine.closureSize, frame.level, nextInstrAddr);
+    writeTableDetails(ast);
+    if (frame.level == Machine.maxRoutineLevel)
+      reporter.reportRestriction("can't nest routines more than 7 deep");
+    else {
+      Frame frame1 = new Frame(frame.level + 1, 0);
+      argsSize = ((Integer) ast.FPS.visit(this, frame1)).intValue();
+      Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
+      valSize = ((Integer) ast.E.visit(this, frame2)).intValue();
+    }
+    emit(Machine.RETURNop, valSize, 0, argsSize);
+    patch(jumpAddr, nextInstrAddr);
+    return new Integer(0);
+  }
 
+	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
+		Frame frame = (Frame) o;
+    int jumpAddr = nextInstrAddr;
+    int argsSize = 0;
+
+    emit(Machine.JUMPop, 0, Machine.CBr, 0);
+    ast.entity = new KnownRoutine (Machine.closureSize, frame.level,
+                                nextInstrAddr);
+    writeTableDetails(ast);
+    if (frame.level == Machine.maxRoutineLevel)
+      reporter.reportRestriction("can't nest routines so deeply");
+    else {
+      Frame frame1 = new Frame(frame.level + 1, 0);
+      argsSize = ((Integer) ast.FPS.visit(this, frame1)).intValue();
+      Frame frame2 = new Frame(frame.level + 1, Machine.linkDataSize);
+      ast.C.visit(this, frame2);
+    }
+    emit(Machine.RETURNop, 0, 0, argsSize);
+    patch(jumpAddr, nextInstrAddr);
+    return new Integer(0);
+	}
 
 	public Object visitEmptyProcFuncSequence(EmptyProcFuncSequence ast, Object o) {
 		// TODO Auto-generated method stub
@@ -1052,13 +1129,22 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitSingleProcFuncSequence(SingleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Frame frame = (Frame) o;
+    int extraSize1;
+    extraSize1 = ((Integer) ast.PF.visit(this, frame)).intValue();
+    
+    return new Integer(0);
 	}
 
 	public Object visitMultipleProcFuncSequence(MultipleProcFuncSequence ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		Frame frame = (Frame) o;
+	  int extraSize1, extraSize2;
+
+    extraSize1 = ((Integer) ast.PF.visit(this, frame)).intValue();
+    Frame frame1 = new Frame (frame, extraSize1);
+    extraSize2 = ((Integer) ast.PFS.visit(this, frame1)).intValue();
+    return new Integer(extraSize1 + extraSize2);
 	}
 
 	public Object visitEmptySingleDeclarationSequence(EmptySingleDeclarationSequence ast, Object o) {
@@ -1067,18 +1153,21 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitMultipleSingleDeclarationSequence(MultipleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Frame frame = (Frame) o;
+    int extraSize1, extraSize2;
+    
+    extraSize1 = ((Integer) ast.D.visit(this, frame)).intValue();
+    Frame frame1 = new Frame (frame, extraSize1);
+    extraSize2 = ((Integer) ast.SDS.visit(this, frame1)).intValue();
+    return new Integer(extraSize1 + extraSize2);
 	}
 
 	public Object visitSingleSingleDeclarationSequence(SingleSingleDeclarationSequence ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public Object visitProcProcFunc(ProcProcFunc ast, Object o) {
-    // TODO Auto-generated method stub
-    return null;
+		Frame frame = (Frame) o;
+    int extraSize1;
+    
+    extraSize1 = ((Integer) ast.D.visit(this, frame)).intValue();
+    return new Integer(extraSize1);
 	}
 
 	public Object visitUntilCommand(UntilCommand ast, Object o) {
