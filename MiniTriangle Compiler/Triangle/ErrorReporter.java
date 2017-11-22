@@ -19,18 +19,18 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
 public class ErrorReporter {
 
   int numErrors;
-  boolean disabled;
+  private boolean disabled;
 
   ErrorReporter() {
     numErrors = 0;
-    disabled = false;
+    setDisabled(false);
   }
   
   
 
   public void reportError(String message, String tokenName, SourcePosition pos) {
     
-  	if(!disabled) {
+  	if(!isDisabled()) {
 	  	System.out.print ("ERROR: ");
 	
 	    for (int p = 0; p < message.length(); p++)
@@ -46,16 +46,28 @@ public class ErrorReporter {
   }
 
   public void reportRestriction(String message) {
-  	if(!disabled) {
+  	if(!isDisabled()) {
   		System.out.println("RESTRICTION: " + message);
   	}
   }
   
   public void disable() {
-  	disabled = true;
+  	setDisabled(true);
   }
   
   public void enable() {
-  	disabled = false;
+  	setDisabled(false);
   }
+
+
+
+	public boolean isDisabled() {
+		return disabled;
+	}
+
+
+
+	public void setDisabled(boolean disabled) {
+		this.disabled = disabled;
+	}
 }

@@ -3,8 +3,7 @@ let
 	var a : Char;       ! dato de entrada
 	var r : Char;       ! resultado = ra�z cuadrada entera (piso de ra�z)
 	const term ~ a;   ! siguiente impar por considerar		
-
-	local 
+	var cond := 8 = 3;
 	recursive
 		func pot4(num: Integer): Integer ~ num * pot3(num)
 		and
@@ -12,28 +11,19 @@ let
 		and
 		func pot3(num: Integer): Integer ~ num * pot2(num)
 		and
-		proc test(var num: Integer) ~ a := 'T'; test(var num); skip; skip end
+		proc test() ~ a := 'T'; skip; skip end
 		and
 		func pot5(num: Integer): Integer ~ num * pot4(num)
 		and 
 		proc test1(a: Char) ~ test2(a) end
 		and
-		proc test2(b: Char) ~ test1(b) end
+		proc test2(b: Char) ~ skip end
 
 
 	end;
+	proc swap() ~ if cond then cond := false else cond := true end end;
 	var z: Integer;
-	const h ~ 'J'
-	in
-
-		par
-			var i : Integer and
-			const hs ~ 'L' and
-			var tshucss := pot4(z) 
-			and proc proc1(var x: Integer) ~ test(var z) end
-		end
-			
-	end;
+	const h ~ 'J';
 	var init := 5;
 	par var k : Char and const lol ~ 'A' end;
 	proc cancer() ~ skip end
@@ -42,13 +32,18 @@ let
 
 in 
 	a := 'P';
-	r := hs;
-	proc1(var tshucss);
+	put(a);
+	test();
+	put(a);
+	putint(pot5(3));
 	r := 'H';
-	if 3>5 then repeat do cancer()
-	until 3+init> 4
- 	end else for var j:= 10 to 20 until 30>3 do cancer() end  end;
-	
+	test1('A');
+	put(h);
+	swap();
+	swap();
+	if cond then put('O')
+	else put('|') end;
+
 	skip
 
 

@@ -749,8 +749,9 @@ public class Parser {
         if (currentToken.kind == Token.BECOMES) {
         	acceptIt();
         	Expression eAST = parseExpression();
-          finish(declarationPos);
-          declarationAST = new InitializedVarDeclaration(iAST, eAST, declarationPos);
+        	Vname vAST = parseRestOfVname(iAST);
+        	finish(declarationPos);
+          declarationAST = new InitializedVarDeclaration(iAST, eAST, vAST,declarationPos);
         	
         }
         else
