@@ -98,6 +98,7 @@ import Triangle.AbstractSyntaxTrees.SingleRecordAggregate;
 import Triangle.AbstractSyntaxTrees.SingleSingleDeclarationSequence;
 import Triangle.AbstractSyntaxTrees.SubscriptVname;
 import Triangle.AbstractSyntaxTrees.TypeDeclaration;
+import Triangle.AbstractSyntaxTrees.TypeDenoter;
 import Triangle.AbstractSyntaxTrees.UnaryExpression;
 import Triangle.AbstractSyntaxTrees.UnaryOperatorDeclaration;
 import Triangle.AbstractSyntaxTrees.UntilCommand;
@@ -706,14 +707,21 @@ public final class Encoder implements Visitor {
     int elemSize, indexSize;
 
     baseObject = (RuntimeEntity) ast.V.visit(this, frame);
+    ArrayTypeDenoter entity = (ArrayTypeDenoter) ast.V.type;
     ast.offset = ast.V.offset;
     ast.indexed = ast.V.indexed;
     elemSize = ((Integer) ast.type.visit(this, null)).intValue();
     if (ast.E instanceof IntegerExpression) {
       IntegerLiteral IL = ((IntegerExpression) ast.E).IL;
       ast.offset = ast.offset + Integer.parseInt(IL.spelling) * elemSize;
+
+      emit(Machine.LOADLop, 0, 0, Integer.parseInt(IL.spelling));
+      emit(Machine.LOADLop, 0, 0, Integer.parseInt(entity.IL.spelling));
+      emit(Machine.CALLop,Machine.SBr,Machine.PBr, Machine.simpleIndexCheck);
+
     } else {
       // v-name is indexed by a proper expression, not a literal
+    	
       if (ast.indexed)
         frame.size = frame.size + Machine.integerSize;
       indexSize = ((Integer) ast.E.visit(this, frame)).intValue();
@@ -724,9 +732,15 @@ public final class Encoder implements Visitor {
       }
       if (ast.indexed)
         emit(Machine.CALLop, Machine.SBr, Machine.PBr, Machine.addDisplacement);
+  
       else
         ast.indexed = true;
+
+      emit(Machine.LOADLop, 0, 0, Integer.parseInt(entity.IL.spelling)*elemSize);      
+      emit(Machine.CALLop,Machine.SBr,Machine.PBr, Machine.indexCheck);
+    	
     }
+    
     return baseObject;
   }
 
