@@ -8,11 +8,12 @@ import Triangle.SyntacticAnalyzer.SourcePosition;
  */
 public class InitializedVarDeclarationFor extends Declaration {
 
-	public InitializedVarDeclarationFor(Identifier iAST, Expression eAST, SourcePosition thePosition) {
+	public InitializedVarDeclarationFor(Identifier iAST, Expression eAST, Vname vAST, SourcePosition thePosition) {
 		super(thePosition);
 	
 		I = iAST;
 		E = eAST;
+		V = vAST;
 	}
 
 	public Object visit(Visitor v, Object o) {
@@ -20,4 +21,5 @@ public class InitializedVarDeclarationFor extends Declaration {
 	}
 	public Identifier I;
 	public Expression E;
+	public Vname V;
 }

@@ -1246,12 +1246,14 @@ public final class Checker implements Visitor {
 
 	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
 		TypeDenoter eType = (TypeDenoter) ast.E.visit(this, null);
+		
 		if(! eType.equals(StdEnvironment.integerType))
 		      reporter.reportError("Integer result expected here", "", ast.E.position);
 		idTable.enter(ast.I.spelling, ast);
 		if (ast.duplicated)
 		  reporter.reportError ("identifier \"%\" already declared",
 		                        ast.I.spelling, ast.position);
+		ast.V.visit(this, null);
 		return null;
 	}
 
