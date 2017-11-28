@@ -386,8 +386,9 @@ public class Parser {
 				Identifier iAST = parseIdentifier();
 				accept(Token.BECOMES);
 				Expression eAST = parseExpression();
+				Vname vAST = parseRestOfVname(iAST);
 				InitializedVarDeclarationFor declarationAST;
-				declarationAST = new InitializedVarDeclarationFor(iAST, eAST, commandPos);
+				declarationAST = new InitializedVarDeclarationFor(iAST, eAST, vAST, commandPos);
 				// TO section 
 				accept(Token.TO);
 				Expression eToAST = parseExpression();

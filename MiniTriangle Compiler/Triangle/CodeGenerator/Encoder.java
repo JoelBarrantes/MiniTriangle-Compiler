@@ -167,7 +167,6 @@ public final class Encoder implements Visitor {
   public Object visitWhileCommand(WhileCommand ast, Object o) {
     Frame frame = (Frame) o;
     int jumpAddr, loopAddr;
-
     jumpAddr = nextInstrAddr;
     emit(Machine.JUMPop, 0, Machine.CBr, 0);
     loopAddr = nextInstrAddr;
@@ -1185,16 +1184,41 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitUntilCommand(UntilCommand ast, Object o) {
-		// TODO Auto-generated method stub
+		Frame frame = (Frame) o;
+		int jumpAddr, loopAddr;
+		jumpAddr = nextInstrAddr;
+		emit(Machine.JUMPop, 0, Machine.CBr, 0);
+		loopAddr = nextInstrAddr;
+		ast.C.visit(this, frame);
+		patch(jumpAddr, nextInstrAddr);
+		ast.E.visit(this, frame);
+		emit(Machine.JUMPIFop, Machine.falseRep,Machine.CBr, loopAddr);
 		return null;
 	}
 
 	public Object visitDoWhileCommand(DoWhileCommand ast, Object o) {
-		// TODO Auto-generated method stub
+		Frame frame = (Frame) o;
+		int jumpAddr, loopAddr;
+		jumpAddr = nextInstrAddr;
+		emit(Machine.JUMPop, 0, Machine.CBr, 0);
+		loopAddr = nextInstrAddr;
+		ast.C.visit(this, frame);
+		patch(jumpAddr, nextInstrAddr);
+		ast.E.visit(this, frame);
+		emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
 		return null;
 	}
 	public Object visitDoUntilCommand(DoUntilCommand ast, Object o) {
-		// TODO Auto-generated method stub
+		Frame frame = (Frame) o;
+		int jumpAddr, loopAddr;
+
+		jumpAddr = nextInstrAddr;
+		emit(Machine.JUMPop, 0, Machine.CBr, 0);
+		loopAddr = nextInstrAddr;
+		ast.C.visit(this, frame);
+		patch(jumpAddr, nextInstrAddr);
+		ast.E.visit(this, frame);
+		emit(Machine.JUMPIFop, Machine.falseRep,Machine.CBr, loopAddr);
 		return null;
 	}
 
@@ -1209,13 +1233,40 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitForDoCommand(ForDoCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		 Frame frame =  (Frame) o;
+		 int jumpAddr,loopAddr;
+		 ast.var.visit(this,frame);
+		 
+		 //int extraSize = (Integer) ast.var.visit(this, frame); // Visit expression
+		 //Frame frame_1 = new Frame(frame.level+1,extraSize);
+		 jumpAddr = nextInstrAddr;
+		 emit(Machine.JUMPop, 0, Machine.CBr, 0);
+		 loopAddr = nextInstrAddr;		 
+		 //VISIT COMMAND
+		 ast.c.visit(this, frame);
+		//INCRESE LOCAL COUNTER
+		 emit(Machine.CALLop,Machine.SBr,Machine.PBr,Machine.succDisplacement);
+		 //Validation
+		 patch(jumpAddr, nextInstrAddr);
+		
+		 Integer valSize = (Integer) ast.var.E.type.visit(this, null);
+	   encodeFetch(ast.var.V, frame, valSize.intValue());
+		 ast.to.visit(this, frame);// visit to expression
+		 emit(Machine.CALLop,Machine.SBr,Machine.PBr,Machine.leDisplacement);
+		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
+		 //emit(Machine.STOREop,0,Machine.CBr,2);
+		 //writeTableDetails(ast);
+		 return null;
 	}
 
 	public Object visitInitializedVarDeclarationFor(InitializedVarDeclarationFor ast, Object o) {
-    // TODO Auto-generated method stub
-    return null;
+		Frame frame = (Frame) o;
+    int extraSize;
+    extraSize = ((Integer) ast.E.visit(this, null)).intValue();
+    ast.entity = new KnownAddress(Machine.addressSize, frame.level, frame.size);
+    writeTableDetails(ast);
+    return new Integer(extraSize); 
 	}
 
 }
+
