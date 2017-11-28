@@ -44,7 +44,7 @@ public class Interpreter {
   final static int
     running = 0, halted = 1, failedDataStoreFull = 2, failedInvalidCodeAddress = 3,
     failedInvalidInstruction = 4, failedOverflow = 5, failedZeroDivide = 6,
-    failedIOError = 7;
+    failedIOError = 7, arrayOutOfBounds = 8;
 
   static long
     accumulator;
@@ -205,6 +205,9 @@ public class Interpreter {
         break;
       case failedIOError:
         System.out.println("Program has failed due to an IO error.");
+        break;
+      case arrayOutOfBounds:
+      	System.out.println("Program has failed due to an array index out of bounds.");
         break;
     }
     if (status != halted)
@@ -427,6 +430,23 @@ public class Interpreter {
         break;
       case Machine.disposeDisplacement:
         ST = ST - 1; // no action taken at present
+        break;
+      case Machine.simpleIndexCheck:
+      	
+      	ST = ST - 1;
+        int result = toInt(0 <= data[ST - 1] && data[ST - 1] < data[ST]);
+        if (result != 1) {
+        	status = arrayOutOfBounds;
+        }
+        ST = ST - 1;
+        break;
+      case Machine.indexCheck:
+      	
+      	ST = ST - 1;
+        int result1 = toInt(0 <= data[ST - 1] && data[ST - 1] < data[ST]);
+        if (result1 != 1) {
+        	status = arrayOutOfBounds;
+        }
         break;
     }
   }
