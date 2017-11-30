@@ -1073,9 +1073,7 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitInitializedVarDeclaration(InitializedVarDeclaration ast, Object o) {
-		
-		//NEED TESTING
-
+	
 		Frame frame = (Frame) o;
     int extraSize;
     
