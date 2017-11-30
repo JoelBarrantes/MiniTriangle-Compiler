@@ -1242,7 +1242,7 @@ public final class Encoder implements Visitor {
 		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
 		 //emit(Machine.STOREop,0,Machine.CBr,2);
 		 //writeTableDetails(ast);
-		 emit(Machine.POPop,0,0,2);//CLEAR THE STACK
+		 emit(Machine.POPop,0,0,1);//CLEAR THE STACK
 		 patch(exit,nextInstrAddr);
 		 return null;
 	}
@@ -1275,7 +1275,7 @@ public final class Encoder implements Visitor {
 		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
 		 //emit(Machine.STOREop,0,Machine.CBr,2);
 		 //writeTableDetails(ast);
-		 emit(Machine.POPop,0,0,2);//CLEAR THE STACK
+		 emit(Machine.POPop,0,0,1);//CLEAR THE STACK
 		 patch(exit,nextInstrAddr);
 		 return null;
 	}
@@ -1304,7 +1304,7 @@ public final class Encoder implements Visitor {
 		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
 		 //emit(Machine.STOREop,0,Machine.CBr,2);
 		 //writeTableDetails(ast);
-		 emit(Machine.POPop,0,0,2);//CLEAR THE STACK
+		 emit(Machine.POPop,0,0,1);//CLEAR THE STACK
 		 return null;
 	}
 
