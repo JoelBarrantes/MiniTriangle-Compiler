@@ -1215,13 +1215,69 @@ public final class Encoder implements Visitor {
 	}
 
 	public Object visitForWhileCommand(ForWhileCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Frame frame =  (Frame) o;
+		 int jumpAddr,loopAddr,exit;
+		 ast.var.visit(this,frame);
+		 
+		 //int extraSize = (Integer) ast.var.visit(this, frame); // Visit expression
+		 //Frame frame_1 = new Frame(frame.level+1,extraSize);
+		 jumpAddr = nextInstrAddr;
+		 emit(Machine.JUMPop, 0, Machine.CBr, 0);
+		 loopAddr = nextInstrAddr;	
+		 ast.wh.visit(this, frame);
+		 exit = nextInstrAddr;
+		 emit(Machine.JUMPIFop, Machine.falseRep,Machine.CBr,0);
+		 //VISIT COMMAND
+		 ast.c.visit(this, frame);
+		//INCRESE LOCAL COUNTER
+		 emit(Machine.CALLop,Machine.SBr,Machine.PBr,Machine.succDisplacement);
+		 //Validation
+		 
+		 patch(jumpAddr, nextInstrAddr);
+		
+		 Integer valSize = (Integer) ast.var.E.type.visit(this, null);
+	   encodeFetch(ast.var.V, frame, valSize.intValue());
+		 ast.to.visit(this, frame);// visit to expression
+		 emit(Machine.CALLop,Machine.SBr,Machine.PBr,Machine.leDisplacement);
+		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
+		 //emit(Machine.STOREop,0,Machine.CBr,2);
+		 //writeTableDetails(ast);
+		 emit(Machine.POPop,0,0,2);//CLEAR THE STACK
+		 patch(exit,nextInstrAddr);
+		 return null;
 	}
   
 	public Object visitForUntilCommand(ForUntilCommand ast, Object o) {
-		// TODO Auto-generated method stub
-		return null;
+		Frame frame =  (Frame) o;
+		 int jumpAddr,loopAddr,exit;
+		 ast.var.visit(this,frame);
+		 
+		 //int extraSize = (Integer) ast.var.visit(this, frame); // Visit expression
+		 //Frame frame_1 = new Frame(frame.level+1,extraSize);
+		 jumpAddr = nextInstrAddr;
+		 emit(Machine.JUMPop, 0, Machine.CBr, 0);
+		 loopAddr = nextInstrAddr;	
+		 ast.un.visit(this, frame);
+		 exit = nextInstrAddr;
+		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr,0);
+		 //VISIT COMMAND
+		 ast.c.visit(this, frame);
+		//INCRESE LOCAL COUNTER
+		 emit(Machine.CALLop,Machine.SBr,Machine.PBr,Machine.succDisplacement);
+		 //Validation
+		 
+		 patch(jumpAddr, nextInstrAddr);
+		
+		 Integer valSize = (Integer) ast.var.E.type.visit(this, null);
+	   encodeFetch(ast.var.V, frame, valSize.intValue());
+		 ast.to.visit(this, frame);// visit to expression
+		 emit(Machine.CALLop,Machine.SBr,Machine.PBr,Machine.leDisplacement);
+		 emit(Machine.JUMPIFop, Machine.trueRep,Machine.CBr, loopAddr);
+		 //emit(Machine.STOREop,0,Machine.CBr,2);
+		 //writeTableDetails(ast);
+		 emit(Machine.POPop,0,0,2);//CLEAR THE STACK
+		 patch(exit,nextInstrAddr);
+		 return null;
 	}
 
 	public Object visitForDoCommand(ForDoCommand ast, Object o) {
